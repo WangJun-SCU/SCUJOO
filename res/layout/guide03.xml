@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/guide3"
+    android:gravity="bottom|center_horizontal"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/guide03_enter"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/select_blue"
+        android:textSize="18sp"
+        android:textColor="#ffffff"
+        android:text="立即体验" />
+
+</LinearLayout>
