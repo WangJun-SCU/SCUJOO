@@ -1,18 +1,44 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    
-    <include layout="@layout/top" />
-    
-    <FrameLayout 
-	    android:id="@+id/id_content"
-	    android:layout_width="fill_parent"
-	    android:layout_height="0dp"
-	    android:layout_weight="1"
-	    ></FrameLayout>
- 
-    <include layout="@layout/bottom" />
- 
-</LinearLayout>
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/id_content_2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <include layout="@layout/top" />
+
+            <FrameLayout
+                android:id="@+id/id_content"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+            </FrameLayout>
+
+            <include layout="@layout/bottom" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/main_left"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="40dp"
+        android:layout_gravity="start"
+        android:background="@color/gray"
+        android:orientation="vertical" >
+
+        <include layout="@layout/drawer_left"/>
+        
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>

@@ -25,6 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.scujoo.PersonalMessage"></activity>
+        <activity android:name="More"></activity>
+        <activity android:name="Login"></activity>
+        <activity android:name="Collection"></activity>
     </application>
 
 </manifest>
