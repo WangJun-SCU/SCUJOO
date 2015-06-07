@@ -22,7 +22,7 @@
         android:background="#ffffff"/>
     
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/login_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -48,13 +48,14 @@
         android:layout_marginRight="70dp"
         android:background="#ffffff"/>
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/login_userpass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="70dp"
         android:layout_marginRight="70dp"
         android:background="@drawable/bg_edittext_login"
+        android:password="true"
         android:textSize="20sp"
         android:gravity="center"
         android:hint="输入教务处密码"/>
@@ -67,7 +68,7 @@
         android:background="#ffffff"/>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/login_id"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

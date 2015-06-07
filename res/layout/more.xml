@@ -114,5 +114,30 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@color/lightblue"/>
+    
+    <LinearLayout
+        android:id="@+id/more_firstuse"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" 
+        android:layout_marginTop="50dp"
+        android:background="@drawable/select_white">
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/first_use" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:text="FirstUse" />
+
+    </LinearLayout>
 
 </LinearLayout>

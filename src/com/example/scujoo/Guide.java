@@ -3,6 +3,9 @@ package com.example.scujoo;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -24,6 +27,14 @@ public class Guide extends FragmentActivity {
 		super.onCreate(arg0);
 		setContentView(R.layout.guide);
 		
+		SharedPreferences sharedPreferences= getSharedPreferences("test", Activity.MODE_PRIVATE); 
+		String first =sharedPreferences.getString("first", ""); 
+		//使用toast信息提示框显示信息 
+		if("true".equals(first))
+		{
+			startActivity(new Intent().setClass(getApplication(),Login.class));
+			finish();
+		}
 		init();
 		
 	}
