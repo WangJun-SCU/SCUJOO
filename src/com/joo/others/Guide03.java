@@ -30,7 +30,7 @@ public class Guide03 extends Fragment {
 				intent.setClass(getActivity(), Login.class);
 				startActivity(intent);
 				//保存是否是第一次使用APP
-				SharedPreferences mySharedPreferences= getActivity().getSharedPreferences("test", getActivity().MODE_PRIVATE); 
+				SharedPreferences mySharedPreferences= getActivity().getSharedPreferences("datas", getActivity().MODE_PRIVATE); 
 				SharedPreferences.Editor editor = mySharedPreferences.edit(); 
 				editor.putString("first", "true"); 
 				editor.commit();

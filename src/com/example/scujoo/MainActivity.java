@@ -1,6 +1,8 @@
 package com.example.scujoo;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -35,12 +37,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private ImageButton topDrawer;
 
 	private TextView topTitle;
+	private TextView name;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Log.v("111111", "2222222222222222");
 
 		init();// 初始化组件
 		initEvent();
@@ -59,6 +61,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void init() {
+		SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
+		
 		bottomHome = (LinearLayout) findViewById(R.id.bottom_home);
 		bottomRecruit = (LinearLayout) findViewById(R.id.bottom_recruit);
 		bottomDemand = (LinearLayout) findViewById(R.id.bottom_demand);
@@ -73,6 +77,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		topDrawer = (ImageButton) findViewById(R.id.top_drawer);
 
 		topTitle = (TextView) findViewById(R.id.top_title);
+		name = (TextView) findViewById(R.id.drawer_left_name);
+		
+		name.setText(sp.getString("name", ""));
 	}
 
 	private void initEvent() {

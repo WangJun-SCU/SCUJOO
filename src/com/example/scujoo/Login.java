@@ -14,9 +14,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -42,6 +45,18 @@ public class Login extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		
+		SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
+		
+		String username = sp.getString("userName", "");
+		String name = sp.getString("name", "");
+		System.out.println("userName"+username);
+		System.out.println("name"+name);
+		if(!"".equals(username))
+		{ 
+			startActivity(new Intent().setClass(Login.this,MainActivity.class));
+			finish();
+		}
+		
 		init();
 		
 		login.setOnClickListener(new View.OnClickListener() {
@@ -61,28 +76,51 @@ public class Login extends Activity {
 					} catch (ExecutionException e) {
 						e.printStackTrace();
 					}
-					if ("200".equals(result)) {
-						Toast.makeText(getApplicationContext(), "登录成功", 1).show();
-						startActivity(new Intent().setClass(Login.this,MainActivity.class));
-						finish();
-					} else if ("404".equals(result)) {
+					if ("404".equals(result)) {
 						Toast.makeText(getApplicationContext(), "用户名或密码错误", 1).show();
 					}else if ("203".equals(result)) {
 						Toast.makeText(getApplicationContext(), "MD5不一致", 1).show();
 					}else{
-						Toast.makeText(getApplicationContext(), result, 1).show();
+						String name = "";
+						String college = "";
+						String major = "";
+						try {
+							JSONObject jsonObject = new JSONObject(result);
+							name = jsonObject.getString("name");
+							college = jsonObject.getString("college");
+							major = jsonObject.getString("major");
+							System.out.println("college"+college);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						//保存用户名密码
+						SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
+						SharedPreferences.Editor editor = sp.edit();
+						editor.putString("userName", userName.getText().toString());
+						editor.putString("userPass", userPass.getText().toString());
+						editor.putString("name", name);
+						System.out.println("name"+name);
+						editor.putString("college", college);
+						editor.putString("major", major);
+						editor.commit();
+						Toast.makeText(getApplicationContext(), "登录成功", 1).show();
+						startActivity(new Intent().setClass(Login.this,MainActivity.class));
+						finish();
 					}
 				}
 			}
 		});
 	}
 
+	//初始化组件
 	private void init() {
 		login = (Button) findViewById(R.id.login_id);
 		userName = (EditText) findViewById(R.id.login_username);
 		userPass = (EditText) findViewById(R.id.login_userpass);
 	}
 	
+	//判断用户名和密码是否填写完成
 	private boolean isEmpty()
 	{
 		if("".equals(userName.getText().toString()))
@@ -99,7 +137,7 @@ public class Login extends Activity {
 		return true;
 	}
 	
-	
+	//异步传输，实现教务处登录
 	class Yibu extends AsyncTask<String, String, String> {
 
 		@Override
@@ -121,7 +159,7 @@ public class Login extends Activity {
 				httpResponse = new DefaultHttpClient().execute(httpPost);
 				if (httpResponse.getStatusLine().getStatusCode() == 200) {
 					String result = EntityUtils.toString(httpResponse.getEntity());
-					System.out.println(result);
+					System.out.println("result"+result);
 					return result;
 				}
 			} catch (ClientProtocolException e) {

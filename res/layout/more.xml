@@ -139,5 +139,28 @@
             android:text="FirstUse" />
 
     </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/more_edit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" 
+        android:layout_marginTop="10dp"
+        android:background="@drawable/select_white">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/first_use" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:text="注销" />
+
+    </LinearLayout>
 
 </LinearLayout>

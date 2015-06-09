@@ -27,10 +27,10 @@ public class Guide extends FragmentActivity {
 		super.onCreate(arg0);
 		setContentView(R.layout.guide);
 		
-		SharedPreferences sharedPreferences= getSharedPreferences("test", Activity.MODE_PRIVATE); 
+		SharedPreferences sharedPreferences= getSharedPreferences("datas", Activity.MODE_PRIVATE); 
 		String first =sharedPreferences.getString("first", ""); 
 		//使用toast信息提示框显示信息 
-		if("true".equals(first))
+		if(!"".equals(first))
 		{
 			startActivity(new Intent().setClass(getApplication(),Login.class));
 			finish();

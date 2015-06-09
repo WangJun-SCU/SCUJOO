@@ -6,14 +6,34 @@
     android:gravity="bottom|center_horizontal"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/guide03_enter"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/select_blue"
-        android:textSize="18sp"
-        android:textColor="#ffffff"
-        android:text="立即体验" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_weight="8"
+            android:background="@color/blue" />
+
+        <Button
+            android:id="@+id/guide03_enter"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:background="@drawable/select_blue"
+            android:text="立即体验"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_weight="8"
+            android:background="@color/blue" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -8,28 +8,28 @@
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="30dp"
+        android:orientation="horizontal" >
+
+        <View 
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_weight="8"
+            android:background="@color/blue"/>
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:src="@drawable/guide_point_light" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
             android:src="@drawable/guide_point" />
         
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/guide_point_light" />
+        <View 
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_weight="8"
+            android:background="@color/blue"/>
     </LinearLayout>
     
 

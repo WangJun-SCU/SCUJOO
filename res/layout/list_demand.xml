@@ -8,6 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:gravity="center_vertical" >
 
         <ImageView
@@ -24,24 +26,27 @@
             android:orientation="vertical" >
 
             <TextView
+                android:id="@+id/list_demand_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:text="广电第十四所" />
 
             <TextView
+                android:id="@+id/list_demand_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textSize="12sp"
-                android:text="招聘职位：研发、测试、技术支持" />
+                android:text="需求职位：研发、测试、技术支持" />
 
             <TextView
+                android:id="@+id/list_demand_publishTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textSize="12sp"
-                android:text="专业需求：计算机、软件" />
+                android:text="发布时间：2015年6月10日" />
 
         </LinearLayout>
 
