@@ -1,8 +1,14 @@
 package com.example.scujoo;
 
+import com.scujoo.utils.CircleImageView;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,7 +26,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	
 	private android.support.v4.widget.DrawerLayout drawerLayout;
 	private LinearLayout mainLeft;
-
 	private LinearLayout bottomHome;
 	private LinearLayout bottomRecruit;
 	private LinearLayout bottomDemand;
@@ -38,6 +43,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private TextView topTitle;
 	private TextView name;
+	
+	private CircleImageView head;
+	private Bitmap headBitmap;
+	private static String path = "/sdcard/myHead/";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +89,20 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		name = (TextView) findViewById(R.id.drawer_left_name);
 		
 		name.setText(sp.getString("name", ""));
+		
+		head = (CircleImageView) findViewById(R.id.drawer_left_head);
+
+		Bitmap bt = BitmapFactory.decodeFile(path + "head.jpg");// 从Sd中找头像，转换成Bitmap
+		if (bt != null) {
+			@SuppressWarnings("deprecation")
+			Drawable drawable = new BitmapDrawable(bt);// 转换成drawable
+			head.setImageDrawable(drawable);
+		} else {
+			/**
+			 * 如果SD里面没有则需要从服务器取头像，取回来的头像再保存在SD中
+			 * 
+			 */
+		}
 	}
 
 	private void initEvent() {

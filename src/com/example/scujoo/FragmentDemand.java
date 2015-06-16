@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,12 +17,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.scujoo.adapter.AdapterDemand;
-import com.scujoo.adapter.AdapterInternship;
 import com.scujoo.datas.DatasDemand;
-import com.scujoo.datas.DatasInternship;
 import com.scujoo.datas.StaticDatas;
 import com.scujoo.utils.HttpUtils;
 import com.scujoo.utils.Md5;
@@ -80,6 +81,18 @@ public class FragmentDemand extends Fragment {
 		params.add(new BasicNameValuePair("md5", md5));
 		System.out.println("传入的数据："+userName+"--"+userPass+"--"+md5);
 		HttpUtils.getJson(URL, handlerDemand, params); 
+		
+		listViewDemand.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				DatasDemand datasDemand = listDemand.get(position);
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), ContentDemand.class);
+				intent.putExtra("id", datasDemand.getId());
+				startActivity(intent);
+			}
+		});
 		
 		return rootView;
 	}

@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.scujoo.adapter.AdapterRecruit;
@@ -25,13 +28,13 @@ import com.scujoo.utils.HttpUtils;
 import com.scujoo.utils.Md5;
 
 public class FragmentRecruit extends Fragment {
-	
+
 	private ListView listViewRecruit;
 	private List<DatasRecruit> listRecruit;
 	private AdapterRecruit adapterRecruit;
-	
+
 	private String URL = StaticDatas.URL + "scujoo/recruit.php";
-	
+
 	private Handler handlerRecruit = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			String jsonData = (String) msg.obj;
@@ -45,7 +48,8 @@ public class FragmentRecruit extends Fragment {
 					String name = obj.getString("name");
 					String recruitPlace = obj.getString("recruitPlace");
 					String recruitTime = obj.getString("recruitTime");
-					listRecruit.add(new DatasRecruit(id,name,recruitTime, recruitPlace));
+					listRecruit.add(new DatasRecruit(id, name, recruitTime,
+							recruitPlace));
 				}
 				adapterRecruit.notifyDataSetChanged();
 			} catch (Exception e) {
@@ -53,19 +57,22 @@ public class FragmentRecruit extends Fragment {
 			}
 		};
 	};
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_recruit, container, false);
-		SharedPreferences sp = getActivity().getSharedPreferences("test", Activity.MODE_PRIVATE); 
+		View rootView = inflater.inflate(R.layout.fragment_recruit, container,
+				false);
+		SharedPreferences sp = getActivity().getSharedPreferences("test",
+				Activity.MODE_PRIVATE);
 		String userName = sp.getString("userName", "");
 		String userPass = sp.getString("userPass", "");
 		String token;
-		token = "userName=" + userName + "&userPass="+ userPass + "token";
+		token = "userName=" + userName + "&userPass=" + userPass + "token";
 		String md5 = Md5.Md5Str(token);
-		
-		listViewRecruit = (ListView) rootView.findViewById(R.id.fragment_recruit_listView);
+
+		listViewRecruit = (ListView) rootView
+				.findViewById(R.id.fragment_recruit_listView);
 		listRecruit = new ArrayList<DatasRecruit>();
 		adapterRecruit = new AdapterRecruit(rootView.getContext(), listRecruit);
 
@@ -76,7 +83,19 @@ public class FragmentRecruit extends Fragment {
 		params.add(new BasicNameValuePair("userPass", userPass));
 		params.add(new BasicNameValuePair("md5", md5));
 		HttpUtils.getJson(URL, handlerRecruit, params);
-		
+
+		listViewRecruit.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				DatasRecruit datasRecruit = listRecruit.get(position);
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), ContentRecruit.class);
+				intent.putExtra("id", datasRecruit.getId());
+				startActivity(intent);
+			}
+		});
+
 		return rootView;
 	}
 

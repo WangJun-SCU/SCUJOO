@@ -8,6 +8,7 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -30,6 +31,9 @@
         <activity android:name="More"></activity>
         <activity android:name="Login"></activity>
         <activity android:name="Collection"></activity>
+        <activity android:name="ContentRecruit"></activity>
+        <activity android:name="ContentDemand"></activity>
+        <activity android:name="ContentInternship"></activity>
     </application>
 
 </manifest>

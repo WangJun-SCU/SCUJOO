@@ -13,6 +13,7 @@
         android:orientation="vertical" >
 
         <com.scujoo.utils.CircleImageView
+            android:id="@+id/drawer_left_head"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerInParent="true"

@@ -6,5 +6,6 @@
     <color name="lightblue">#4ef0e6</color>
     <color name="white">#ffffff</color>
     <color name="deepblue">#005757</color>
+    <color name="transparent">#00000000</color>
     
 </resources>
