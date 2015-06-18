@@ -193,6 +193,7 @@ public class ContentInternship extends Activity {
 				if (httpResponse.getStatusLine().getStatusCode() == 200) {
 					String result = EntityUtils.toString(httpResponse
 							.getEntity());
+					System.out.println("ContentInternship∑µªÿ–≈œ¢:"+result);
 					try {
 						obj = new JSONObject(
 								new JSONObject(result).getString("result"));

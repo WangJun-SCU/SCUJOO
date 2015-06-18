@@ -63,7 +63,25 @@ public class FragmentRecruit extends Fragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_recruit, container,
 				false);
-		SharedPreferences sp = getActivity().getSharedPreferences("test",
+
+		String url = "default";
+		String content = "default";
+		String select = "default";
+		
+		try {
+			url = getArguments().getString("url11", "");
+			content = getArguments().getString("content", "");
+			select = getArguments().getString("select", "");
+			if (url != "") {
+				URL = url;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Fragment.URL="+URL);
+		System.out.println("Fragment.content="+content);
+
+		SharedPreferences sp = getActivity().getSharedPreferences("datas",
 				Activity.MODE_PRIVATE);
 		String userName = sp.getString("userName", "");
 		String userPass = sp.getString("userPass", "");
@@ -82,6 +100,15 @@ public class FragmentRecruit extends Fragment {
 		params.add(new BasicNameValuePair("userName", userName));
 		params.add(new BasicNameValuePair("userPass", userPass));
 		params.add(new BasicNameValuePair("md5", md5));
+		System.out.println("FragmentRecruit.content=" + content);
+		if ("default".equals(content)) {
+
+		} else if("recruit".equals(content)){
+			params.add(new BasicNameValuePair("content", content));
+			params.add(new BasicNameValuePair("select", select));
+			URL = "http://120.25.245.241/scujoo/select.php";
+		}
+		System.out.println("传入的数据：" + userName + "--" + userPass + "--" + md5);
 		HttpUtils.getJson(URL, handlerRecruit, params);
 
 		listViewRecruit.setOnItemClickListener(new OnItemClickListener() {
@@ -91,11 +118,12 @@ public class FragmentRecruit extends Fragment {
 				DatasRecruit datasRecruit = listRecruit.get(position);
 				Intent intent = new Intent();
 				intent.setClass(getActivity(), ContentRecruit.class);
+				System.out.println("datasRecruit.getId()="
+						+ datasRecruit.getId());
 				intent.putExtra("id", datasRecruit.getId());
 				startActivity(intent);
 			}
 		});
-
 		return rootView;
 	}
 

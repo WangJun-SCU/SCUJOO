@@ -62,7 +62,25 @@ public class FragmentDemand extends Fragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_demand, container, false);
 		
-		SharedPreferences sp = getActivity().getSharedPreferences("test", Activity.MODE_PRIVATE); 
+		String url = "default";
+		String content = "default";
+		String select = "default";
+		
+		try {
+			url = getArguments().getString("url12","");
+			content = getArguments().getString("content", "");
+			select = getArguments().getString("select", "");
+			if(url!="")
+			{
+				URL = url;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Fragment.URL="+URL);
+		System.out.println("Fragment.content="+content);
+		
+		SharedPreferences sp = getActivity().getSharedPreferences("datas", Activity.MODE_PRIVATE); 
 		String userName = sp.getString("userName", "");
 		String userPass = sp.getString("userPass", "");
 		String token;
@@ -79,6 +97,15 @@ public class FragmentDemand extends Fragment {
 		params.add(new BasicNameValuePair("userName", userName));
 		params.add(new BasicNameValuePair("userPass", userPass));
 		params.add(new BasicNameValuePair("md5", md5));
+		
+		if ("default".equals(content)) {
+
+		} else if("demand".equals(content)){
+			params.add(new BasicNameValuePair("content", content));
+			params.add(new BasicNameValuePair("select", select));
+			URL = "http://120.25.245.241/scujoo/select.php";
+		}
+		
 		System.out.println("传入的数据："+userName+"--"+userPass+"--"+md5);
 		HttpUtils.getJson(URL, handlerDemand, params); 
 		

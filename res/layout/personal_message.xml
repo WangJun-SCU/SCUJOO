@@ -15,7 +15,7 @@
             android:id="@+id/personal_message_back"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:background="#00000000"
+            android:background="@drawable/select_trans"
             android:src="@drawable/back" />
 
         <TextView
@@ -52,28 +52,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:text="李莹"
+        android:text="name"
         android:textColor="#ffffff"
         android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:padding="5dp"
-        android:background="@drawable/select_blue"
-        android:textSize="16sp"
-        android:text="编辑个人资料"
-        android:textColor="#ffffff" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:orientation="vertical" >
 
 
@@ -94,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:text="电气信息学院"
+                android:text="college"
                 android:textColor="#ffffff" />
         </LinearLayout>
 
@@ -121,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:text="自动化"
+                android:text="major"
                 android:textColor="#ffffff" />
         </LinearLayout>
 
@@ -148,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:text="294555862@qq.com"
+                android:text="记得填写哦~~"
                 android:textColor="#ffffff" />
         </LinearLayout>
 
@@ -174,7 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:text="我是个瘦子....."
+                android:text="记得填写哦~~"
                 android:textColor="#ffffff" />
         </LinearLayout>
     </LinearLayout>

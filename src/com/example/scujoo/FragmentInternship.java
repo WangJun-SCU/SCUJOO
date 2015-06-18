@@ -29,13 +29,13 @@ import com.scujoo.utils.HttpUtils;
 import com.scujoo.utils.Md5;
 
 public class FragmentInternship extends Fragment {
-	
+
 	private ListView listViewInternship;
 	private List<DatasInternship> listInternship;
 	private AdapterInternship adapterInternship;
-	
+
 	private String URL = StaticDatas.URL + "scujoo/internship.php";
-	
+
 	private Handler handlerInternship = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			String jsonData = (String) msg.obj;
@@ -49,7 +49,8 @@ public class FragmentInternship extends Fragment {
 					String name = obj.getString("name");
 					String publishTime = obj.getString("publishTime");
 					String position = obj.getString("position");
-					listInternship.add(new DatasInternship(id,name,publishTime, position));
+					listInternship.add(new DatasInternship(id, name,
+							publishTime, position));
 				}
 				adapterInternship.notifyDataSetChanged();
 			} catch (Exception e) {
@@ -57,22 +58,42 @@ public class FragmentInternship extends Fragment {
 			}
 		};
 	};
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_internship, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_internship,
+				container, false);
+
+		String url = "default";
+		String content = "default";
+		String select = "default";
 		
-		SharedPreferences sp = getActivity().getSharedPreferences("test", Activity.MODE_PRIVATE); 
+		try {
+			url = getArguments().getString("url13", "");
+			content = getArguments().getString("content", "");
+			select = getArguments().getString("select", "");
+			if (url != "") {
+				URL = url;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("url=" + url);
+
+		SharedPreferences sp = getActivity().getSharedPreferences("datas",
+				Activity.MODE_PRIVATE);
 		String userName = sp.getString("userName", "");
 		String userPass = sp.getString("userPass", "");
 		String token;
-		token = "userName=" + userName + "&userPass="+ userPass + "token";
+		token = "userName=" + userName + "&userPass=" + userPass + "token";
 		String md5 = Md5.Md5Str(token);
-		
-		listViewInternship = (ListView) rootView.findViewById(R.id.fragment_internship_listView);
+
+		listViewInternship = (ListView) rootView
+				.findViewById(R.id.fragment_internship_listView);
 		listInternship = new ArrayList<DatasInternship>();
-		adapterInternship = new AdapterInternship(rootView.getContext(), listInternship);
+		adapterInternship = new AdapterInternship(rootView.getContext(),
+				listInternship);
 
 		listViewInternship.setAdapter(adapterInternship);
 
@@ -80,9 +101,18 @@ public class FragmentInternship extends Fragment {
 		params.add(new BasicNameValuePair("userName", userName));
 		params.add(new BasicNameValuePair("userPass", userPass));
 		params.add(new BasicNameValuePair("md5", md5));
-		System.out.println("传入的数据："+userName+"--"+userPass+"--"+md5);
-		HttpUtils.getJson(URL, handlerInternship, params); 
 		
+		if ("default".equals(content)) {
+
+		} else if("internship".equals(content)){
+			params.add(new BasicNameValuePair("content", content));
+			params.add(new BasicNameValuePair("select", select));
+			URL = "http://120.25.245.241/scujoo/select.php";
+		}
+		
+		System.out.println("传入的数据：" + userName + "--" + userPass + "--" + md5);
+		HttpUtils.getJson(URL, handlerInternship, params);
+
 		listViewInternship.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -94,7 +124,7 @@ public class FragmentInternship extends Fragment {
 				startActivity(intent);
 			}
 		});
-		
+
 		return rootView;
 	}
 

@@ -182,9 +182,10 @@ class Yibu extends AsyncTask<String, String, String[]>{
 		param.add(new BasicNameValuePair("id",id));
 		param.add(new BasicNameValuePair("userId", userName));
 		param.add(new BasicNameValuePair("messageId", id));
+		
 		System.out.println(param);
 		try {
-			String[] result1 = new String[9];
+			String[] result1 = new String[9]; 
 			JSONObject obj = null;
 			String collectYn = null;
 			
@@ -193,6 +194,7 @@ class Yibu extends AsyncTask<String, String, String[]>{
 			System.out.println(httpResponse.getStatusLine().getStatusCode());
 			if (httpResponse.getStatusLine().getStatusCode() == 200) {
 				String result = EntityUtils.toString(httpResponse.getEntity());
+				System.out.println("详细信息返回结果："+result);
 				try {
 					obj = new JSONObject(new JSONObject(result).getString("result"));
 				} catch (JSONException e) {
@@ -206,7 +208,7 @@ class Yibu extends AsyncTask<String, String, String[]>{
 			if(httpResponse3.getStatusLine().getStatusCode() == 200)
 			{
 				String result2 = EntityUtils.toString(httpResponse3.getEntity());
-				System.out.println("返回结果："+result2);
+				System.out.println("是否收藏返回结果："+result2);
 				try {
 					JSONObject obj2 = new JSONObject(result2);
 					collectYn = obj2.getString("result");

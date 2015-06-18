@@ -34,6 +34,7 @@
         <activity android:name="ContentRecruit"></activity>
         <activity android:name="ContentDemand"></activity>
         <activity android:name="ContentInternship"></activity>
+        <activity android:name="Search"></activity>
     </application>
 
 </manifest>
