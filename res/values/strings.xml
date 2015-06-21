@@ -2,5 +2,6 @@
 <resources>
 
     <string name="app_name">校招宝</string>
+    <string name="right">\@2015 SCUJOB All rights reserved.</string>
 
 </resources>

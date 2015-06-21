@@ -5,11 +5,16 @@
     android:layout_height="match_parent"
     android:background="@color/gray"
     android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/drawer_left_1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
 
     <RelativeLayout
+        android:id="@+id/drawer_left_4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:orientation="vertical" >
 
         <com.scujoo.utils.CircleImageView
@@ -24,19 +29,22 @@
 
     <TextView
         android:id="@+id/drawer_left_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:text="李莹"
         android:textColor="#ffffff"
         android:textSize="22sp" />
+    <TextView
+        android:id="@+id/drawer_left_2"
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
 
     <LinearLayout
         android:id="@+id/drawer_left_personal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="30dp"
         android:background="@drawable/select_gray_blue"
         android:gravity="center_horizontal" >
 
@@ -101,5 +109,12 @@
             android:textColor="#ffffff"
             android:textSize="20sp" />
     </LinearLayout>
+    
+    <TextView
+        android:id="@+id/drawer_left_3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
 
 </LinearLayout>

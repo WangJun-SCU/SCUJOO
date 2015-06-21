@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -21,19 +21,20 @@
             android:id="@+id/textView2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_marginRight="40dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textSize="20sp"
+            android:text="更多"
             android:textColor="#ffffff"
-            android:text="更多" />
-
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/more_about_us"
         android:layout_width="match_parent"
-        android:layout_height="50dp" 
-        android:layout_marginTop="20dp">
+        android:background="@drawable/select_trans"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp" >
 
         <ImageView
             android:id="@+id/imageView1"
@@ -48,19 +49,21 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:gravity="center_vertical"
-            android:textSize="18sp"
-            android:text="关于我们" />
-
+            android:text="关于我们"
+            android:textSize="18sp" />
     </LinearLayout>
-    
-    <View android:layout_width="match_parent"
+
+    <View
+        android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@color/lightblue"/>
-    
-     <LinearLayout
+        android:background="@color/lightblue" />
+
+    <LinearLayout
+        android:id="@+id/more_option_back"
         android:layout_width="match_parent"
+        android:background="@drawable/select_trans"
         android:layout_height="50dp" >
 
         <ImageView
@@ -76,19 +79,21 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:gravity="center_vertical"
-            android:textSize="18sp"
-            android:text="意见反馈" />
-
+            android:text="意见反馈"
+            android:textSize="18sp" />
     </LinearLayout>
-    
-    <View android:layout_width="match_parent"
+
+    <View
+        android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@color/lightblue"/>
-    
-     <LinearLayout
+        android:background="@color/lightblue" />
+
+    <LinearLayout
+        android:id="@+id/more_update"
         android:layout_width="match_parent"
+        android:background="@drawable/select_trans"
         android:layout_height="50dp" >
 
         <ImageView
@@ -104,23 +109,23 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:gravity="center_vertical"
-            android:textSize="18sp"
-            android:text="版本更新" />
-
+            android:text="版本更新"
+            android:textSize="18sp" />
     </LinearLayout>
-    
-    <View android:layout_width="match_parent"
+
+    <View
+        android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@color/lightblue"/>
-    
+        android:background="@color/lightblue" />
+
     <LinearLayout
         android:id="@+id/more_firstuse"
         android:layout_width="match_parent"
-        android:layout_height="50dp" 
+        android:layout_height="50dp"
         android:layout_marginTop="50dp"
-        android:background="@drawable/select_white">
+        android:background="@drawable/select_white" >
 
         <ImageView
             android:id="@+id/imageView1"
@@ -135,17 +140,16 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:gravity="center_vertical"
-            android:textSize="18sp"
-            android:text="FirstUse" />
-
+            android:text="FirstUse"
+            android:textSize="18sp" />
     </LinearLayout>
-    
+
     <LinearLayout
         android:id="@+id/more_edit"
         android:layout_width="match_parent"
-        android:layout_height="50dp" 
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/select_white">
+        android:background="@drawable/select_white" >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -158,9 +162,8 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:gravity="center_vertical"
-            android:textSize="18sp"
-            android:text="注销" />
-
+            android:text="注销"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>

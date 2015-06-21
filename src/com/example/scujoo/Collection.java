@@ -1,12 +1,10 @@
 package com.example.scujoo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -84,6 +82,12 @@ public class Collection extends FragmentActivity implements OnClickListener {
 			topTitle.setText("校园宣讲");
 			if (fragmentRecruit == null) {
 				fragmentRecruit = new FragmentRecruit();
+
+				Bundle bundle = new Bundle();
+				bundle.putString("url11",
+						"http://120.25.245.241/scujoo/recruit_collect.php");
+				fragmentRecruit.setArguments(bundle);
+
 				ft.add(R.id.collection_content, fragmentRecruit);
 			} else {
 				ft.show(fragmentRecruit);
@@ -134,17 +138,17 @@ public class Collection extends FragmentActivity implements OnClickListener {
 	}
 
 	// 将fragment隐藏起来
-	private void hideFragment(FragmentTransaction ft) {
-		if (fragmentRecruit != null) {
-			ft.hide(fragmentRecruit);
+		private void hideFragment(FragmentTransaction ft) {
+			if (fragmentRecruit != null) {
+				ft.hide(fragmentRecruit);
+			}
+			if (fragmentDemand != null) {
+				ft.hide(fragmentDemand);
+			}
+			if (fragmentIntership != null) {
+				ft.hide(fragmentIntership);
+			}
 		}
-		if (fragmentDemand != null) {
-			ft.hide(fragmentDemand);
-		}
-		if (fragmentIntership != null) {
-			ft.hide(fragmentIntership);
-		}
-	}
 
 	// 点击按钮呈现颜色
 	void showBlue(LinearLayout ll) {

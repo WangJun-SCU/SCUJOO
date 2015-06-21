@@ -1,7 +1,5 @@
 package com.example.scujoo;
 
-import com.scujoo.utils.CircleImageView;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,14 +15,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.scujoo.utils.CircleImageView;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
 
@@ -46,6 +46,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private ImageButton topDrawer;
 	private ImageButton topSearch;
 
+	private TextView nouse1;
+	private TextView nouse2;
+	private TextView nouse3;
+	private RelativeLayout nouse4;
+
 	private TextView topTitle;
 	private TextView name;
 	private static String topTitleStr = "nima";
@@ -61,27 +66,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		init();// 初始化组件
 		initEvent();
-		
+
 		topSearch.setVisibility(View.INVISIBLE);
 
 		String content = "";
 		content = getIntent().getStringExtra("content");
+		System.out.println("MainActivity.content:" + content);
+
 		String select = getIntent().getStringExtra("select");
 
 		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		if("".equals(content))
-		{
+		FragmentTransaction ft1 = fm.beginTransaction();
+		if (content == null) {
 			topTitle.setText("首页");
 			if (fragmentHome == null) {
 				fragmentHome = new FragmentHome();
-				ft.add(R.id.id_content, fragmentHome);
+				ft1.add(R.id.id_content, fragmentHome);
 			} else {
-				ft.show(fragmentHome);
+				ft1.show(fragmentHome);
 			}
-			ft.commit();
-		}else if("recruit".equals(content))
-		{
+			ft1.commit();
+		} else if ("recruit".equals(content)) {
 			topSearch.setVisibility(View.VISIBLE);
 			hideBlue();
 			showBlue(bottomRecruit);
@@ -93,14 +98,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				bundle.putString("content", content);
 				bundle.putString("select", select);
 				fragmentRecruit.setArguments(bundle);
-				System.out.println("MainActivity.content="+content);
-				ft.add(R.id.id_content, fragmentRecruit);
+				System.out.println("MainActivity.content=" + content);
+				ft1.add(R.id.id_content, fragmentRecruit);
 			} else {
-				ft.show(fragmentRecruit);
+				ft1.show(fragmentRecruit);
 			}
-			ft.commit();
-		}else if("demand".equals(content))
-		{
+			ft1.commit();
+		} else if ("demand".equals(content)) {
 			topSearch.setVisibility(View.VISIBLE);
 			hideBlue();
 			showBlue(bottomDemand);
@@ -112,14 +116,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				bundle.putString("content", content);
 				bundle.putString("select", select);
 				fragmentDemand.setArguments(bundle);
-				System.out.println("MainActivity.content="+content);
-				ft.add(R.id.id_content, fragmentDemand);
+				System.out.println("MainActivity.content=" + content);
+				ft1.add(R.id.id_content, fragmentDemand);
 			} else {
-				ft.show(fragmentDemand);
+				ft1.show(fragmentDemand);
 			}
-			ft.commit();
-		}else if("internship".equals(content))
-		{
+			ft1.commit();
+		} else if ("internship".equals(content)) {
 			topSearch.setVisibility(View.VISIBLE);
 			hideBlue();
 			showBlue(bottomInternship);
@@ -131,18 +134,35 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				bundle.putString("content", content);
 				bundle.putString("select", select);
 				fragmentIntership.setArguments(bundle);
-				System.out.println("MainActivity.content="+content);
-				ft.add(R.id.id_content, fragmentIntership);
+				System.out.println("MainActivity.content=" + content);
+				ft1.add(R.id.id_content, fragmentIntership);
 			} else {
-				ft.show(fragmentIntership);
+				ft1.show(fragmentIntership);
 			}
-			ft.commit();
+			ft1.commit();
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		init();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		drawerLayout.closeDrawer(mainLeft);
 	}
 
 	private void init() {
 		SharedPreferences sp = getSharedPreferences("datas",
 				Activity.MODE_PRIVATE);
+
+		nouse1 = (TextView) findViewById(R.id.drawer_left_1);
+		nouse2 = (TextView) findViewById(R.id.drawer_left_2);
+		nouse3 = (TextView) findViewById(R.id.drawer_left_3);
+		nouse4 = (RelativeLayout) findViewById(R.id.drawer_left_4);
 
 		bottomHome = (LinearLayout) findViewById(R.id.bottom_home);
 		bottomRecruit = (LinearLayout) findViewById(R.id.bottom_recruit);
@@ -188,24 +208,26 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		more.setOnClickListener(this);
 		collection.setOnClickListener(this);
 		topSearch.setOnClickListener(this);
+		nouse1.setOnClickListener(this);
+		nouse2.setOnClickListener(this);
+		nouse3.setOnClickListener(this);
+		nouse4.setOnClickListener(this);
+		name.setOnClickListener(this);
 	}
 
 	public void onClick(View v) {
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
-		hideFragment(ft);
+		removeFragment(ft);
+		// hideFragment(ft);
 		switch (v.getId()) {
 		case R.id.bottom_home:
 			topSearch.setVisibility(View.INVISIBLE);
 			hideBlue();
 			showBlue(bottomHome);
 			topTitle.setText("首页");
-			if (fragmentHome == null) {
-				fragmentHome = new FragmentHome();
-				ft.add(R.id.id_content, fragmentHome);
-			} else {
-				ft.show(fragmentHome);
-			}
+			fragmentHome = new FragmentHome();
+			ft.add(R.id.id_content, fragmentHome);
 			ft.commit();
 			break;
 		case R.id.bottom_recruit:
@@ -214,12 +236,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			showBlue(bottomRecruit);
 			topTitle.setText("校园宣讲");
 			topTitleStr = (String) topTitle.getText();
-			if (fragmentRecruit == null) {
-				fragmentRecruit = new FragmentRecruit();
-				ft.add(R.id.id_content, fragmentRecruit);
-			} else {
-				ft.show(fragmentRecruit);
-			}
+			fragmentRecruit = new FragmentRecruit();
+			ft.add(R.id.id_content, fragmentRecruit);
 			ft.commit();
 			break;
 		case R.id.bottom_demand:
@@ -228,12 +246,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			showBlue(bottomDemand);
 			topTitle.setText("就业需求");
 			topTitleStr = (String) topTitle.getText();
-			if (fragmentDemand == null) {
-				fragmentDemand = new FragmentDemand();
-				ft.add(R.id.id_content, fragmentDemand);
-			} else {
-				ft.show(fragmentDemand);
-			}
+			fragmentDemand = new FragmentDemand();
+			ft.add(R.id.id_content, fragmentDemand);
 			ft.commit();
 			break;
 		case R.id.bottom_internship:
@@ -243,12 +257,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			topTitle.setText("实习讯息");
 			topTitleStr = (String) topTitle.getText();
 			System.out.println("222222222");
-			if (fragmentIntership == null) {
-				fragmentIntership = new FragmentInternship();
-				ft.add(R.id.id_content, fragmentIntership);
-			} else {
-				ft.show(fragmentIntership);
-			}
+			fragmentIntership = new FragmentInternship();
+			ft.add(R.id.id_content, fragmentIntership);
 			ft.commit();
 			break;
 		case R.id.top_drawer:
@@ -267,10 +277,19 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;
 		case R.id.top_search:
 			Intent intent = new Intent();
-			intent.setClass(MainActivity.this,Search.class);
+			intent.setClass(MainActivity.this, Search.class);
 			intent.putExtra("content", topTitleStr);
 			startActivity(intent);
-			finish();
+			break;
+		case R.id.drawer_left_1:
+			break;
+		case R.id.drawer_left_2:
+			break;
+		case R.id.drawer_left_3:
+			break;
+		case R.id.drawer_left_4:
+			break;
+		case R.id.drawer_left_name:
 			break;
 		default:
 			break;
@@ -281,15 +300,43 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private void hideFragment(FragmentTransaction ft) {
 		if (fragmentHome != null) {
 			ft.hide(fragmentHome);
+			// fragmentHome = null;
 		}
 		if (fragmentRecruit != null) {
 			ft.hide(fragmentRecruit);
+			// fragmentRecruit = null;
 		}
 		if (fragmentDemand != null) {
 			ft.hide(fragmentDemand);
+			// fragmentDemand = null;
 		}
 		if (fragmentIntership != null) {
 			ft.hide(fragmentIntership);
+			// fragmentIntership = null;
+		}
+	}
+
+	// 将fragment移除
+	private void removeFragment(FragmentTransaction ft) {
+		if (fragmentHome != null) {
+			ft.remove(fragmentHome);
+			System.out.println("111111");
+			// ft.commit();
+		}
+		if (fragmentRecruit != null) {
+			ft.remove(fragmentRecruit);
+			System.out.println("22222");
+			// ft.commit();
+		}
+		if (fragmentDemand != null) {
+			ft.remove(fragmentDemand);
+			System.out.println("333333");
+			// ft.commit();
+		}
+		if (fragmentIntership != null) {
+			ft.remove(fragmentIntership);
+			System.out.println("444444");
+			// ft.commit();
 		}
 	}
 
@@ -306,41 +353,37 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		bottomInternship.setBackgroundColor(getResources().getColor(
 				R.color.gray));
 	}
-	
-	//点击两次返回按钮实现退出程序
+
+	// 点击两次返回按钮实现退出程序
 	private static boolean isExit = false;
 
+	Handler mHandler = new Handler() {
 
-    Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			isExit = false;
+		}
+	};
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			exit();
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            isExit = false;
-        }
-    };
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            exit();
-            return false;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-
-    private void exit() {
-        if (!isExit) {
-            isExit = true;
-            Toast.makeText(getApplicationContext(), "再按一次退出程序",
-                    Toast.LENGTH_SHORT).show();
-            // 利用handler延迟发送更改状态信息
-            mHandler.sendEmptyMessageDelayed(0, 2000);
-        } else {
-            finish();
-            System.exit(0);
-        }
-    }
+	private void exit() {
+		if (!isExit) {
+			isExit = true;
+			Toast.makeText(getApplicationContext(), "再按一次退出程序",
+					Toast.LENGTH_SHORT).show();
+			mHandler.sendEmptyMessageDelayed(0, 2000);
+		} else {
+			finish();
+			System.exit(0);
+		}
+	}
 }
