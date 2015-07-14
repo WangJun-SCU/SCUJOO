@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +29,14 @@ import com.scujoo.datas.StaticDatas;
 import com.scujoo.utils.HttpUtils;
 import com.scujoo.utils.Md5;
 
-public class FragmentInternship extends Fragment {
+public class FragmentInternship extends Fragment implements
+		SwipeRefreshLayout.OnRefreshListener {
 
 	private ListView listViewInternship;
 	private List<DatasInternship> listInternship;
 	private AdapterInternship adapterInternship;
+
+	private SwipeRefreshLayout swipeRefreshLayout;
 
 	private String URL = StaticDatas.URL + "scujoo/internship.php";
 
@@ -59,16 +63,32 @@ public class FragmentInternship extends Fragment {
 		};
 	};
 
+	private Handler myHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			if (msg.what == 0x1234) {
+				swipeRefreshLayout.setRefreshing(false);
+			}
+		}
+	};
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_internship,
 				container, false);
 
+		// 刷新空间的声明
+		swipeRefreshLayout = (SwipeRefreshLayout) rootView
+				.findViewById(R.id.fragment_internship_refresh);
+		// 刷新监听器
+		swipeRefreshLayout.setOnRefreshListener(this);
+		// 设置刷新效果的颜色
+		swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_dark, android.R.color.holo_green_dark,android.R.color.holo_orange_dark, android.R.color.holo_red_dark);
+
 		String url = "default";
 		String content = "default";
 		String select = "default";
-		
+
 		try {
 			url = getArguments().getString("url13", "");
 			content = getArguments().getString("content", "");
@@ -101,15 +121,15 @@ public class FragmentInternship extends Fragment {
 		params.add(new BasicNameValuePair("userName", userName));
 		params.add(new BasicNameValuePair("userPass", userPass));
 		params.add(new BasicNameValuePair("md5", md5));
-		
+
 		if ("default".equals(content)) {
 
-		} else if("internship".equals(content)){
+		} else if ("internship".equals(content)) {
 			params.add(new BasicNameValuePair("content", content));
 			params.add(new BasicNameValuePair("select", select));
 			URL = "http://120.25.245.241/scujoo/select.php";
 		}
-		
+
 		System.out.println("传入的数据：" + userName + "--" + userPass + "--" + md5);
 		HttpUtils.getJson(URL, handlerInternship, params);
 
@@ -126,6 +146,10 @@ public class FragmentInternship extends Fragment {
 		});
 
 		return rootView;
+	}
+
+	public void onRefresh() {
+		myHandler.sendEmptyMessageDelayed(0x1234, 2000);
 	}
 
 }

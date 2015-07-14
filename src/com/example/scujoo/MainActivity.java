@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,6 +60,24 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private Bitmap headBitmap;
 	private static String path = "/sdcard/myHead/";
 
+	private SwipeRefreshLayout swipeRefreshLayout;
+
+	/*private Handler myHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			FragmentManager fm = getSupportFragmentManager();
+			FragmentTransaction ft = fm.beginTransaction();
+			removeFragment(ft);
+			topSearch.setVisibility(View.VISIBLE);
+			hideBlue();
+			showBlue(bottomRecruit);
+			topTitle.setText("Ð£Ô°Ðû½²");
+			topTitleStr = (String) topTitle.getText();
+			fragmentRecruit = new FragmentRecruit();
+			ft.add(R.id.id_content, fragmentRecruit);
+			ft.commit();
+		}
+	};
+*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -159,6 +178,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		SharedPreferences sp = getSharedPreferences("datas",
 				Activity.MODE_PRIVATE);
 
+		//swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.fragment_recruit_refresh);
+
 		nouse1 = (TextView) findViewById(R.id.drawer_left_1);
 		nouse2 = (TextView) findViewById(R.id.drawer_left_2);
 		nouse3 = (TextView) findViewById(R.id.drawer_left_3);
@@ -213,6 +234,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		nouse3.setOnClickListener(this);
 		nouse4.setOnClickListener(this);
 		name.setOnClickListener(this);
+		//swipeRefreshLayout.setOnRefreshListener((OnRefreshListener) this);
 	}
 
 	public void onClick(View v) {
@@ -280,6 +302,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			intent.setClass(MainActivity.this, Search.class);
 			intent.putExtra("content", topTitleStr);
 			startActivity(intent);
+			finish();
 			break;
 		case R.id.drawer_left_1:
 			break;
@@ -386,4 +409,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			System.exit(0);
 		}
 	}
+
+/*	public void onRefresh() {
+		myHandler.sendEmptyMessageDelayed(0x1234, 1000);
+	}*/
+
 }

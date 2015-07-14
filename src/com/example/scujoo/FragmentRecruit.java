@@ -14,6 +14,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +29,13 @@ import com.scujoo.datas.StaticDatas;
 import com.scujoo.utils.HttpUtils;
 import com.scujoo.utils.Md5;
 
-public class FragmentRecruit extends Fragment {
+public class FragmentRecruit extends Fragment implements
+		SwipeRefreshLayout.OnRefreshListener {
 
 	private ListView listViewRecruit;
 	private List<DatasRecruit> listRecruit;
 	private AdapterRecruit adapterRecruit;
+	private SwipeRefreshLayout swipeRefreshLayout;
 
 	private String URL = StaticDatas.URL + "scujoo/recruit.php";
 
@@ -58,16 +62,33 @@ public class FragmentRecruit extends Fragment {
 		};
 	};
 
+	private Handler myHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			if (msg.what == 0x1234) {
+				swipeRefreshLayout.setRefreshing(false);
+			}
+		}
+	};
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_recruit, container,
 				false);
 
+		//刷新空间的声明
+		swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(
+				R.id.fragment_recruit_refresh);
+		//刷新监听器
+		swipeRefreshLayout.setOnRefreshListener(this);
+		//设置刷新效果的颜色
+		swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_dark, android.R.color.holo_green_dark,android.R.color.holo_orange_dark, android.R.color.holo_red_dark);
+
 		String url = "default";
 		String content = "default";
 		String select = "default";
-		
+
+		//判断是否是从其他界面过来的
 		try {
 			url = getArguments().getString("url11", "");
 			content = getArguments().getString("content", "");
@@ -78,8 +99,6 @@ public class FragmentRecruit extends Fragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("Fragment.URL="+URL);
-		System.out.println("Fragment.content="+content);
 
 		SharedPreferences sp = getActivity().getSharedPreferences("datas",
 				Activity.MODE_PRIVATE);
@@ -103,7 +122,7 @@ public class FragmentRecruit extends Fragment {
 		System.out.println("FragmentRecruit.content=" + content);
 		if ("default".equals(content)) {
 
-		} else if("recruit".equals(content)){
+		} else if ("recruit".equals(content)) {
 			params.add(new BasicNameValuePair("content", content));
 			params.add(new BasicNameValuePair("select", select));
 			URL = "http://120.25.245.241/scujoo/select.php";
@@ -127,4 +146,7 @@ public class FragmentRecruit extends Fragment {
 		return rootView;
 	}
 
+	public void onRefresh() {
+		myHandler.sendEmptyMessageDelayed(0x1234, 2000);
+	}
 }

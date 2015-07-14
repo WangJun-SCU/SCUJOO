@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -37,6 +38,7 @@ public class Login extends Activity {
 
 	private EditText userName;
 	private EditText userPass;
+	private ProgressDialog pDialog;
 
 	private String md5;
 	
@@ -67,47 +69,9 @@ public class Login extends Activity {
 				
 				if(isE)
 				{
+					
 					Yibu yb = new Yibu();
-					String result = "default";
-					try {
-						result = yb.execute().get();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} catch (ExecutionException e) {
-						e.printStackTrace();
-					}
-					if ("404".equals(result)) {
-						Toast.makeText(getApplicationContext(), "用户名或密码错误", 1).show();
-					}else if ("203".equals(result)) {
-						Toast.makeText(getApplicationContext(), "MD5不一致", 1).show();
-					}else{
-						String name = "";
-						String college = "";
-						String major = "";
-						try {
-							JSONObject jsonObject = new JSONObject(result);
-							name = jsonObject.getString("name");
-							college = jsonObject.getString("college");
-							major = jsonObject.getString("major");
-							System.out.println("college"+college);
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						//保存用户名密码
-						SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
-						SharedPreferences.Editor editor = sp.edit();
-						editor.putString("userName", userName.getText().toString());
-						editor.putString("userPass", userPass.getText().toString());
-						editor.putString("name", name);
-						System.out.println("name"+name);
-						editor.putString("college", college);
-						editor.putString("major", major);
-						editor.commit();
-						Toast.makeText(getApplicationContext(), "登录成功", 1).show();
-						startActivity(new Intent().setClass(Login.this,MainActivity.class));
-						finish();
-					}
+					yb.execute();
 				}
 			}
 		});
@@ -139,6 +103,16 @@ public class Login extends Activity {
 	
 	//异步传输，实现教务处登录
 	class Yibu extends AsyncTask<String, String, String> {
+		
+		@Override
+		 protected void onPreExecute() {
+	            super.onPreExecute();
+	            pDialog = new ProgressDialog(Login.this);
+	            pDialog.setMessage("正在登录...");
+	            pDialog.setIndeterminate(false);
+	            pDialog.setCancelable(true);
+	            pDialog.show();
+	        }
 
 		@Override
 		protected String doInBackground(String... params) {
@@ -171,7 +145,40 @@ public class Login extends Activity {
 			}
 			return "33";
 		}
-		protected void onPostExecute(String message) {                  
+		protected void onPostExecute(String message) {
+			pDialog.dismiss();
+			if ("404".equals(message)) {
+				Toast.makeText(getApplicationContext(), "用户名或密码错误", 1).show();
+			}else if ("203".equals(message)) {
+				Toast.makeText(getApplicationContext(), "MD5不一致", 1).show();
+			}else{
+				String name = "";
+				String college = "";
+				String major = "";
+				try {
+					JSONObject jsonObject = new JSONObject(message);
+					name = jsonObject.getString("name");
+					college = jsonObject.getString("college");
+					major = jsonObject.getString("major");
+					System.out.println("college"+college);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//保存用户名密码
+				SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
+				SharedPreferences.Editor editor = sp.edit();
+				editor.putString("userName", userName.getText().toString());
+				editor.putString("userPass", userPass.getText().toString());
+				editor.putString("name", name);
+				System.out.println("name"+name);
+				editor.putString("college", college);
+				editor.putString("major", major);
+				editor.commit();
+				Toast.makeText(getApplicationContext(), "登录成功", 1).show();
+				startActivity(new Intent().setClass(Login.this,MainActivity.class));
+				finish();
+			}
         }
 	}
 
