@@ -36,6 +36,8 @@
         <activity android:name="ContentInternship"></activity>
         <activity android:name="Search"></activity>
         <activity android:name="com.joo.others.AboutUs"></activity>
+        <activity android:name="EditMail"></activity>
+        <activity android:name="EditIntro"></activity>
     </application>
 
 </manifest>

@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import com.scujoo.utils.CircleImageView;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,21 +18,26 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.scujoo.utils.CircleImageView;
+
 public class PersonalMessage extends Activity {
 
 	private ImageButton back;
+	private ImageButton editMail;
+	private ImageButton editIntro;
 	private TextView name;
 	private TextView college;
 	private TextView major;
+	private TextView mail;
+	private TextView intro;
 	private CircleImageView head;
 	private Bitmap headBitmap;
-	private static String path = "/sdcard/myHead/";
+	private static String path = "/sdcard/myHead/";// 本地储存头像路径
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,55 +47,103 @@ public class PersonalMessage extends Activity {
 		init();
 		initMessage();
 
+		// 返回按钮
 		back.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
 				finish();
 			}
 		});
-		
+
+		// 更改头像
 		head.setOnClickListener(new View.OnClickListener() {
-			
+
 			public void onClick(View v) {
-				new AlertDialog.Builder(PersonalMessage.this) // build AlertDialog  
-                .setTitle("更换头像") // title  
-                .setItems(R.array.items, new DialogInterface.OnClickListener() { //content  
-                    public void onClick(DialogInterface dialog, int which) {  
-                        final String[] aryShop = getResources().getStringArray(R.array.items); //array  
-                        if("拍照".equals(aryShop[which]))
-                        {
-                        	Toast.makeText(getApplicationContext(), aryShop[which], 1).show();
-                        	Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                			intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(
-                					Environment.getExternalStorageDirectory(), "head.jpg")));
-                			startActivityForResult(intent2, 2);// 采用ForResult打开
-                        }else if("从相册选择".equals(aryShop[which]))
-                        {
-                        	Toast.makeText(getApplicationContext(), aryShop[which], 1).show();
-                        	Intent intent1 = new Intent(Intent.ACTION_PICK, null);
-                			intent1.setDataAndType(
-                					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                			startActivityForResult(intent1, 1);
-                        }
-                    }  
-                })  
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {  
-                      
-                    public void onClick(DialogInterface dialog, int which) {  
-                        dialog.dismiss(); //关闭alertDialog  
-                    }  
-                })  
-                .show(); 
+				new AlertDialog.Builder(PersonalMessage.this)
+						// build AlertDialog
+						.setTitle("更换头像")
+						// title
+						.setItems(R.array.items,
+								new DialogInterface.OnClickListener() { // content
+									public void onClick(DialogInterface dialog,
+											int which) {
+										final String[] aryShop = getResources()
+												.getStringArray(R.array.items); // array
+										if ("拍照".equals(aryShop[which])) {
+											Toast.makeText(
+													getApplicationContext(),
+													aryShop[which], 1).show();
+											Intent intent2 = new Intent(
+													MediaStore.ACTION_IMAGE_CAPTURE);
+											intent2.putExtra(
+													MediaStore.EXTRA_OUTPUT,
+													Uri.fromFile(new File(
+															Environment
+																	.getExternalStorageDirectory(),
+															"head.jpg")));
+											startActivityForResult(intent2, 2);// 采用ForResult打开
+										} else if ("从相册选择"
+												.equals(aryShop[which])) {
+											Toast.makeText(
+													getApplicationContext(),
+													aryShop[which], 1).show();
+											Intent intent1 = new Intent(
+													Intent.ACTION_PICK, null);
+											intent1.setDataAndType(
+													MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+													"image/*");
+											startActivityForResult(intent1, 1);
+										}
+									}
+								})
+						.setNegativeButton("取消",
+								new DialogInterface.OnClickListener() {
+
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.dismiss(); // 关闭alertDialog
+									}
+								}).show();
 			}
 		});
+		editMail.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				startActivity(new Intent().setClass(PersonalMessage.this,
+						EditMail.class));
+			}
+		});
+
+		editIntro.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				startActivity(new Intent().setClass(PersonalMessage.this,
+						EditIntro.class));
+			}
+		});
+
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		SharedPreferences sp = getSharedPreferences("datas",
+				Activity.MODE_PRIVATE);
+		mail.setText(sp.getString("mail", ""));
+		intro.setText(sp.getString("intro", ""));
 	}
 
+	// 初始化组件
 	private void init() {
 		back = (ImageButton) findViewById(R.id.personal_message_back);
 		name = (TextView) findViewById(R.id.personal_message_name);
 		college = (TextView) findViewById(R.id.personal_message_college);
 		major = (TextView) findViewById(R.id.personal_message_major);
+		mail = (TextView) findViewById(R.id.personal_message_mail);
+		intro = (TextView) findViewById(R.id.personal_message_intro);
 		head = (CircleImageView) findViewById(R.id.personal_message_head);
+		editMail = (ImageButton) findViewById(R.id.personal_message_eidt_mail);
+		editIntro = (ImageButton) findViewById(R.id.personal_message_eidt_intro);
 
 		Bitmap bt = BitmapFactory.decodeFile(path + "head.jpg");// 从Sd中找头像，转换成Bitmap
 		if (bt != null) {
@@ -115,6 +166,8 @@ public class PersonalMessage extends Activity {
 		name.setText(sp.getString("name", ""));
 		college.setText(sp.getString("college", ""));
 		major.setText(sp.getString("major", ""));
+		mail.setText(sp.getString("mail", ""));
+		intro.setText(sp.getString("intro", ""));
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -152,8 +205,7 @@ public class PersonalMessage extends Activity {
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	};
-	
-	
+
 	/**
 	 * 调用系统的裁剪
 	 * 

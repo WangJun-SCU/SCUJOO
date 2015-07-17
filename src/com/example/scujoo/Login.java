@@ -124,9 +124,6 @@ public class Login extends Activity {
 			param.add(new BasicNameValuePair("userName", userName.getText().toString()));
 			param.add(new BasicNameValuePair("userPass", userPass.getText().toString()));
 			param.add(new BasicNameValuePair("md5",md5));
-			System.out.println(md5);
-			System.out.println(userName.getText().toString());
-			System.out.println(userPass.getText().toString());
 			HttpResponse httpResponse = null;
 			try {
 				httpPost.setEntity(new UrlEncodedFormEntity(param, HTTP.UTF_8));
@@ -155,12 +152,16 @@ public class Login extends Activity {
 				String name = "";
 				String college = "";
 				String major = "";
+				String mail = "";
+				String intro = "";
 				try {
 					JSONObject jsonObject = new JSONObject(message);
 					name = jsonObject.getString("name");
 					college = jsonObject.getString("college");
 					major = jsonObject.getString("major");
-					System.out.println("college"+college);
+					mail = jsonObject.getString("mail");
+					intro = jsonObject.getString("intro");
+					System.out.println(mail+"111"+intro);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -171,9 +172,10 @@ public class Login extends Activity {
 				editor.putString("userName", userName.getText().toString());
 				editor.putString("userPass", userPass.getText().toString());
 				editor.putString("name", name);
-				System.out.println("name"+name);
 				editor.putString("college", college);
 				editor.putString("major", major);
+				editor.putString("mail", mail);
+				editor.putString("intro", intro);
 				editor.commit();
 				Toast.makeText(getApplicationContext(), "µÇÂ¼³É¹¦", 1).show();
 				startActivity(new Intent().setClass(Login.this,MainActivity.class));
