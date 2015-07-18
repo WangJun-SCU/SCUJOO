@@ -9,19 +9,21 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.scujoo.adapter.AdapterRecruit;
 import com.scujoo.datas.DatasRecruit;
@@ -36,12 +38,16 @@ public class FragmentRecruit extends Fragment implements
 	private List<DatasRecruit> listRecruit;
 	private AdapterRecruit adapterRecruit;
 	private SwipeRefreshLayout swipeRefreshLayout;
+	private ProgressDialog dialog;
+
+	private TextView topTitle;
 
 	private String URL = StaticDatas.URL + "scujoo/recruit.php";
 
 	private Handler handlerRecruit = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			String jsonData = (String) msg.obj;
+			dialog.dismiss();
 			try {
 				JSONObject jsonObject = new JSONObject(jsonData);
 				String object = jsonObject.getString("result");
@@ -75,6 +81,12 @@ public class FragmentRecruit extends Fragment implements
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_recruit, container,
 				false);
+		//显示正在加载
+		dialog = new ProgressDialog(getActivity());
+		dialog.setMessage("正在加载...");
+		dialog.setIndeterminate(false);
+		dialog.setCancelable(true);
+		dialog.show();
 
 		//刷新空间的声明
 		swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(
@@ -143,6 +155,18 @@ public class FragmentRecruit extends Fragment implements
 				startActivity(intent);
 			}
 		});
+		if (url != "") {
+			
+		}else{
+			topTitle = (TextView) getActivity().findViewById(R.id.top_title);
+			topTitle.setOnClickListener(new View.OnClickListener() {
+				
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					listViewRecruit.setSelectionAfterHeaderView();
+				}
+			});
+		}
 		return rootView;
 	}
 

@@ -82,7 +82,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		init();// 初始化组件
 		initEvent();
 
@@ -409,9 +409,5 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			System.exit(0);
 		}
 	}
-
-/*	public void onRefresh() {
-		myHandler.sendEmptyMessageDelayed(0x1234, 1000);
-	}*/
 
 }

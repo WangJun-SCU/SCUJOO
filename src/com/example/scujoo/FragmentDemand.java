@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.scujoo.adapter.AdapterDemand;
 import com.scujoo.datas.DatasDemand;
@@ -34,6 +36,9 @@ public class FragmentDemand extends Fragment implements
 	private ListView listViewDemand;
 	private List<DatasDemand> listDemand;
 	private AdapterDemand adapterDemand;
+	private ProgressDialog dialog;
+	
+	private TextView topTitle;
 
 	private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -42,6 +47,7 @@ public class FragmentDemand extends Fragment implements
 	private Handler handlerDemand = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			String jsonData = (String) msg.obj;
+			dialog.dismiss();
 			try {
 				JSONObject jsonObject = new JSONObject(jsonData);
 				String object = jsonObject.getString("result");
@@ -75,6 +81,12 @@ public class FragmentDemand extends Fragment implements
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_demand, container,
 				false);
+		// 显示正在加载
+		dialog = new ProgressDialog(getActivity());
+		dialog.setMessage("正在加载...");
+		dialog.setIndeterminate(false);
+		dialog.setCancelable(true);
+		dialog.show();
 
 		// 刷新空间的声明
 		swipeRefreshLayout = (SwipeRefreshLayout) rootView
@@ -82,7 +94,11 @@ public class FragmentDemand extends Fragment implements
 		// 刷新监听器
 		swipeRefreshLayout.setOnRefreshListener(this);
 		// 设置刷新效果的颜色
-		swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_dark, android.R.color.holo_green_dark,android.R.color.holo_orange_dark, android.R.color.holo_red_dark);
+		swipeRefreshLayout
+				.setColorScheme(android.R.color.holo_blue_dark,
+						android.R.color.holo_green_dark,
+						android.R.color.holo_orange_dark,
+						android.R.color.holo_red_dark);
 
 		String url = "default";
 		String content = "default";
@@ -143,7 +159,18 @@ public class FragmentDemand extends Fragment implements
 				startActivity(intent);
 			}
 		});
-
+		if (url != "") {
+			
+		}else{
+			topTitle = (TextView) getActivity().findViewById(R.id.top_title);
+			topTitle.setOnClickListener(new View.OnClickListener() {
+				
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					listViewDemand.setSelectionAfterHeaderView();
+				}
+			});
+		}
 		return rootView;
 	}
 

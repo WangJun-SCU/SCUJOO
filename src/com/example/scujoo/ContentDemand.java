@@ -17,20 +17,18 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.scujoo.ContentRecruit.Yibu2;
-import com.example.scujoo.ContentRecruit.Yibu3;
-import com.scujoo.datas.StaticDatas;
-import com.scujoo.utils.Md5;
-
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.scujoo.datas.StaticDatas;
+import com.scujoo.utils.Md5;
 
 public class ContentDemand extends Activity {
 
@@ -192,7 +190,7 @@ public class ContentDemand extends Activity {
 				if (httpResponse.getStatusLine().getStatusCode() == 200) {
 					String result = EntityUtils.toString(httpResponse
 							.getEntity());
-					System.out.println("ContentDemand返回信息:"+result);
+					System.out.println("ContentDemand返回信息:" + result);
 					try {
 						obj = new JSONObject(
 								new JSONObject(result).getString("result"));
