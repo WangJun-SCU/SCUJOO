@@ -17,7 +17,10 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -84,6 +87,20 @@ public class EditMail extends Activity implements OnClickListener {
 			break;
 		case R.id.edit_mail_save:
 			mailContnet = content.getText().toString();
+
+			// 判断是否有网络连接
+			Context context = getApplicationContext();
+			ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo mNetworkInfo = mConnectivityManager
+					.getActiveNetworkInfo();
+			if (mNetworkInfo != null) {
+
+			} else {
+				Toast.makeText(getApplicationContext(), "无网络连接", 1).show();
+				finish();
+			}
+
 			System.out.println(mailContnet);
 			Yibu yibu = new Yibu();
 			yibu.execute();
@@ -99,19 +116,20 @@ public class EditMail extends Activity implements OnClickListener {
 			HttpResponse httpResponse = null;
 			List<NameValuePair> param = new ArrayList<NameValuePair>();
 			String token;
-			token = "userName=" + userName+ "&userPass="
-					+ userPass + "token";
+			token = "userName=" + userName + "&userPass=" + userPass + "token";
 			md5 = Md5.Md5Str(token);
 			param.add(new BasicNameValuePair("userName", userName));
 			param.add(new BasicNameValuePair("userPass", userPass));
 			param.add(new BasicNameValuePair("md5", md5));
-			param.add(new BasicNameValuePair("mail", content.getText().toString()));
-			
+			param.add(new BasicNameValuePair("mail", content.getText()
+					.toString()));
+
 			try {
 				httpPost.setEntity(new UrlEncodedFormEntity(param, HTTP.UTF_8));
 				httpResponse = new DefaultHttpClient().execute(httpPost);
 				if (httpResponse.getStatusLine().getStatusCode() == 200) {
-					String result = EntityUtils.toString(httpResponse.getEntity());
+					String result = EntityUtils.toString(httpResponse
+							.getEntity());
 					return result;
 				}
 			} catch (ClientProtocolException e) {
@@ -125,13 +143,13 @@ public class EditMail extends Activity implements OnClickListener {
 			}
 			return "33";
 		}
-		
+
 		@Override
 		protected void onPostExecute(String result) {
-			if(result.equals("200"))
-			{
+			if (result.equals("200")) {
 				Toast.makeText(getApplicationContext(), "修改成功", 1).show();
-				SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
+				SharedPreferences sp = getSharedPreferences("datas",
+						Activity.MODE_PRIVATE);
 				SharedPreferences.Editor editor = sp.edit();
 				editor.putString("mail", content.getText().toString());
 				editor.commit();

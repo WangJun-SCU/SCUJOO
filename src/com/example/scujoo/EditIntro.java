@@ -16,10 +16,14 @@ import org.apache.http.util.EntityUtils;
 
 import com.example.scujoo.EditMail.Yibu;
 import com.scujoo.datas.StaticDatas;
+import com.scujoo.utils.HttpUtils;
 import com.scujoo.utils.Md5;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -84,6 +88,18 @@ public class EditIntro extends Activity implements OnClickListener{
 		case R.id.edit_intro_save:
 			introContnet = content.getText().toString();
 			System.out.println(introContnet);
+			
+			// 判断是否有网络连接
+			Context context = getApplicationContext();
+			ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+			if (mNetworkInfo != null) {
+				
+			} else {
+				Toast.makeText(getApplicationContext(), "无网络连接", 1).show();
+				finish();
+			}
 			Yibu yibu = new Yibu();
 			yibu.execute();
 			break;

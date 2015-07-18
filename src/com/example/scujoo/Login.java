@@ -69,7 +69,6 @@ public class Login extends Activity {
 				
 				if(isE)
 				{
-					
 					Yibu yb = new Yibu();
 					yb.execute();
 				}
@@ -166,20 +165,28 @@ public class Login extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//保存用户名密码
-				SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
-				SharedPreferences.Editor editor = sp.edit();
-				editor.putString("userName", userName.getText().toString());
-				editor.putString("userPass", userPass.getText().toString());
-				editor.putString("name", name);
-				editor.putString("college", college);
-				editor.putString("major", major);
-				editor.putString("mail", mail);
-				editor.putString("intro", intro);
-				editor.commit();
-				Toast.makeText(getApplicationContext(), "登录成功", 1).show();
-				startActivity(new Intent().setClass(Login.this,MainActivity.class));
-				finish();
+				
+				if(college!="")
+				{
+					//保存用户名密码
+					SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
+					SharedPreferences.Editor editor = sp.edit();
+					editor.putString("userName", userName.getText().toString());
+					editor.putString("userPass", userPass.getText().toString());
+					editor.putString("name", name);
+					editor.putString("college", college);
+					editor.putString("major", major);
+					editor.putString("mail", mail);
+					editor.putString("intro", intro);
+					editor.commit();
+					Toast.makeText(getApplicationContext(), "登录成功", 1).show();
+					startActivity(new Intent().setClass(Login.this,MainActivity.class));
+					finish();
+				}else{
+					Toast.makeText(getApplicationContext(), "没有连接网络", 1).show();
+					finish();
+				}
+				
 			}
         }
 	}

@@ -10,8 +10,11 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -23,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.scujoo.adapter.AdapterDemand;
 import com.scujoo.datas.DatasDemand;
@@ -37,7 +41,7 @@ public class FragmentDemand extends Fragment implements
 	private List<DatasDemand> listDemand;
 	private AdapterDemand adapterDemand;
 	private ProgressDialog dialog;
-	
+
 	private TextView topTitle;
 
 	private SwipeRefreshLayout swipeRefreshLayout;
@@ -146,7 +150,18 @@ public class FragmentDemand extends Fragment implements
 		}
 
 		System.out.println("传入的数据：" + userName + "--" + userPass + "--" + md5);
-		HttpUtils.getJson(URL, handlerDemand, params);
+
+		// 判断是否有网络连接
+		Context context = getActivity().getApplicationContext();
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		if (mNetworkInfo != null) {
+			HttpUtils.getJson(URL, handlerDemand, params);
+		} else {
+			Toast.makeText(getActivity(), "无网络连接", 1).show();
+			getActivity().finish();
+		}
 
 		listViewDemand.setOnItemClickListener(new OnItemClickListener() {
 
@@ -160,11 +175,11 @@ public class FragmentDemand extends Fragment implements
 			}
 		});
 		if (url != "") {
-			
-		}else{
+
+		} else {
 			topTitle = (TextView) getActivity().findViewById(R.id.top_title);
 			topTitle.setOnClickListener(new View.OnClickListener() {
-				
+
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					listViewDemand.setSelectionAfterHeaderView();
