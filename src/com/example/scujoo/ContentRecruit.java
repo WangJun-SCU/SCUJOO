@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView.FindListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class ContentRecruit extends Activity {
 	private TextView workPlace;
 	private TextView intro;
 	private TextView others;
+	private TextView hits;
 	private String id;
 	private String URL = StaticDatas.URL + "scujoo/content_recruit.php";
 	private String URLCollect = StaticDatas.URL + "scujoo/collect_recruit.php";
@@ -69,6 +71,7 @@ public class ContentRecruit extends Activity {
 			workPlace.setText(result2[5]);
 			intro.setText(result2[6]);
 			others.setText(result2[7]);
+			hits.setText("‰Ø¿¿("+result2[9]+")");
 			if("200".equals(result2[8]))
 			{
 				collect.setImageResource(R.drawable.collect_full);
@@ -153,6 +156,7 @@ public class ContentRecruit extends Activity {
 		workPlace = (TextView) findViewById(R.id.content_recruit_work_place);
 		intro = (TextView) findViewById(R.id.content_recruit_intro);
 		others = (TextView) findViewById(R.id.content_recruit_others);
+		hits = (TextView) findViewById(R.id.content_recruit_hits);
 		id = getIntent().getStringExtra("id");
 		
 		SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
@@ -185,7 +189,7 @@ class Yibu extends AsyncTask<String, String, String[]>{
 		
 		System.out.println(param);
 		try {
-			String[] result1 = new String[9]; 
+			String[] result1 = new String[10]; 
 			JSONObject obj = null;
 			String collectYn = null;
 			
@@ -228,6 +232,7 @@ class Yibu extends AsyncTask<String, String, String[]>{
 				result1[6] = obj.getString("intro");
 				result1[7] = obj.getString("others");
 				result1[8] = collectYn;
+				result1[9] = obj.getString("hits");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

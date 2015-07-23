@@ -45,6 +45,7 @@ public class ContentInternship extends Activity {
 	private TextView workPlace;
 	private TextView intro;
 	private TextView others;
+	private TextView hits;
 	private String id;
 	private String URL = StaticDatas.URL + "scujoo/content_internship.php";
 	private String URLCollect = StaticDatas.URL + "scujoo/collect_internship.php";
@@ -63,7 +64,7 @@ public class ContentInternship extends Activity {
 		init();
 
 		Yibu yibu = new Yibu();
-		String[] result2 = new String[9];
+		String[] result2 = new String[10];
 		try {
 			result2 = yibu.execute().get();
 			name.setText(result2[0]);
@@ -74,6 +75,7 @@ public class ContentInternship extends Activity {
 			workPlace.setText(result2[5]);
 			intro.setText(result2[6]);
 			others.setText(result2[7]);
+			hits.setText("‰Ø¿¿("+result2[9]+")");
 			if ("200".equals(result2[8])) {
 				collect.setImageResource(R.drawable.collect_full);
 				collect.setTag("2");
@@ -154,6 +156,7 @@ public class ContentInternship extends Activity {
 		workPlace = (TextView) findViewById(R.id.content_demand_work_place);
 		intro = (TextView) findViewById(R.id.content_demand_intro);
 		others = (TextView) findViewById(R.id.content_demand_others);
+		hits = (TextView) findViewById(R.id.content_demand_hits);
 		id = getIntent().getStringExtra("id");
 
 		SharedPreferences sp = getSharedPreferences("datas",
@@ -184,7 +187,7 @@ public class ContentInternship extends Activity {
 			System.out.println(param);
 
 			try {
-				String[] result1 = new String[9];
+				String[] result1 = new String[10];
 				JSONObject obj = null;
 				String collectYn = null;
 
@@ -229,6 +232,7 @@ public class ContentInternship extends Activity {
 					result1[6] = obj.getString("intro");
 					result1[7] = obj.getString("others");
 					result1[8] = collectYn;
+					result1[9] = obj.getString("hits");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

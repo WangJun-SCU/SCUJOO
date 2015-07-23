@@ -118,8 +118,6 @@ public class FragmentDemand extends Fragment implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("Fragment.URL=" + URL);
-		System.out.println("Fragment.content=" + content);
 
 		SharedPreferences sp = getActivity().getSharedPreferences("datas",
 				Activity.MODE_PRIVATE);
@@ -128,19 +126,19 @@ public class FragmentDemand extends Fragment implements
 		String token;
 		token = "userName=" + userName + "&userPass=" + userPass + "token";
 		String md5 = Md5.Md5Str(token);
-
-		listViewDemand = (ListView) rootView
-				.findViewById(R.id.fragment_demand_listView);
+		//核心代码
+		listViewDemand = (ListView) rootView.findViewById(R.id.fragment_demand_listView);
 		listDemand = new ArrayList<DatasDemand>();
 		adapterDemand = new AdapterDemand(rootView.getContext(), listDemand);
-
 		listViewDemand.setAdapter(adapterDemand);
-
+		
+		//封装传送到服务器的数据
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("userName", userName));
 		params.add(new BasicNameValuePair("userPass", userPass));
 		params.add(new BasicNameValuePair("md5", md5));
 
+		//判断是否是从搜索界面回调
 		if ("default".equals(content)) {
 
 		} else if ("demand".equals(content)) {
@@ -149,20 +147,19 @@ public class FragmentDemand extends Fragment implements
 			URL = "http://120.25.245.241/scujoo/select.php";
 		}
 
-		System.out.println("传入的数据：" + userName + "--" + userPass + "--" + md5);
-
 		// 判断是否有网络连接
 		Context context = getActivity().getApplicationContext();
-		ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 		if (mNetworkInfo != null) {
+			//如果有网络连接，执行异步传输
 			HttpUtils.getJson(URL, handlerDemand, params);
 		} else {
 			Toast.makeText(getActivity(), "无网络连接", 1).show();
 			getActivity().finish();
 		}
 
+		//设置listView监听事件
 		listViewDemand.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -177,6 +174,7 @@ public class FragmentDemand extends Fragment implements
 		if (url != "") {
 
 		} else {
+			//点击标题title返回顶部
 			topTitle = (TextView) getActivity().findViewById(R.id.top_title);
 			topTitle.setOnClickListener(new View.OnClickListener() {
 

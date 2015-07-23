@@ -97,7 +97,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft1 = fm.beginTransaction();
 		if (content == null) {
-			topTitle.setText("首页");
+			topTitle.setText("热门招聘");
 			if (fragmentHome == null) {
 				fragmentHome = new FragmentHome();
 				ft1.add(R.id.id_content, fragmentHome);
@@ -247,7 +247,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			topSearch.setVisibility(View.INVISIBLE);
 			hideBlue();
 			showBlue(bottomHome);
-			topTitle.setText("首页");
+			topTitle.setText("热门招聘");
 			fragmentHome = new FragmentHome();
 			ft.add(R.id.id_content, fragmentHome);
 			ft.commit();

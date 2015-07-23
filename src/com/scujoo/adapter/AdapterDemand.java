@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.scujoo.R;
 import com.scujoo.datas.DatasDemand;
-import com.scujoo.datas.DatasRecruit;
 
 public class AdapterDemand extends BaseAdapter {
 	
