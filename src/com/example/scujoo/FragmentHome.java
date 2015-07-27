@@ -26,6 +26,9 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -45,7 +48,8 @@ import com.scujoo.datas.DatasRecruit;
 import com.scujoo.datas.StaticDatas;
 import com.scujoo.utils.Md5;
 
-public class FragmentHome extends Fragment {
+public class FragmentHome extends Fragment implements
+		SwipeRefreshLayout.OnRefreshListener {
 
 	private ListView recruit;
 	private ListView demand;
@@ -64,6 +68,11 @@ public class FragmentHome extends Fragment {
 	private LinearLayout llOutRecruit;
 	private LinearLayout llOutDemand;
 	private LinearLayout llOutInternship;
+	private LinearLayout topCalendar;
+	private SwipeRefreshLayout swipeRefreshLayout;
+	private FragmentHome fragmentHome;
+	FragmentManager fm;
+	FragmentTransaction ft;
 
 	private String URL = StaticDatas.URL + "scujoo/hot_home.php";
 
@@ -75,13 +84,36 @@ public class FragmentHome extends Fragment {
 		llRecruit.setVisibility(View.INVISIBLE);
 		llDemand.setVisibility(View.INVISIBLE);
 		llIntrenship.setVisibility(View.INVISIBLE);
+		
+		String callBack = "";
+		try {
+			callBack = getArguments().getString("callBack", "");
+			System.out.println("callBack:" + callBack);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
-		// 显示正在加载
-		dialog = new ProgressDialog(getActivity());
-		dialog.setMessage("正在加载...");
-		dialog.setIndeterminate(false);
-		dialog.setCancelable(true);
-		dialog.show();
+		// 刷新监听器
+		swipeRefreshLayout.setOnRefreshListener(this);
+		// 设置刷新效果的颜色
+		swipeRefreshLayout
+				.setColorScheme(android.R.color.holo_blue_dark,
+						android.R.color.holo_green_dark,
+						android.R.color.holo_orange_dark,
+						android.R.color.holo_red_dark);
+
+		if (callBack.equals("callBack")) {
+			dialog = new ProgressDialog(getActivity());
+			swipeRefreshLayout.setRefreshing(true);
+		} else {
+			// 显示正在加载
+			dialog = new ProgressDialog(getActivity());
+			dialog.setMessage("正在加载...");
+			dialog.setIndeterminate(false);
+			dialog.setCancelable(true);
+			dialog.show();
+		}
 
 		Yibu yibu = new Yibu();
 		yibu.execute();
@@ -148,6 +180,12 @@ public class FragmentHome extends Fragment {
 				.findViewById(R.id.fragment_home_out_demand);
 		llOutInternship = (LinearLayout) rootView
 				.findViewById(R.id.fragment_home_out_intrernship);
+		topCalendar = (LinearLayout) getActivity().findViewById(
+				R.id.id_top_calendar);
+		swipeRefreshLayout = (SwipeRefreshLayout) rootView
+				.findViewById(R.id.fragment_home_refresh);
+		fm = getActivity().getSupportFragmentManager();
+		ft = fm.beginTransaction();
 	}
 
 	class Yibu extends AsyncTask<String, String, String> {
@@ -197,6 +235,8 @@ public class FragmentHome extends Fragment {
 		@Override
 		protected void onPostExecute(String result) {
 			dialog.dismiss();
+			swipeRefreshLayout.setRefreshing(false);
+			topCalendar.setVisibility(View.GONE);
 			llRecruit.setVisibility(View.VISIBLE);
 			llDemand.setVisibility(View.VISIBLE);
 			llIntrenship.setVisibility(View.VISIBLE);
@@ -284,6 +324,15 @@ public class FragmentHome extends Fragment {
 				+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
 		return params.height;
 		// listView.setLayoutParams(params);
+	}
+
+	public void onRefresh() {
+		fragmentHome = new FragmentHome();
+		Bundle bundle = new Bundle();
+		bundle.putString("callBack", "callBack");
+		fragmentHome.setArguments(bundle);
+		ft.replace(R.id.id_content, fragmentHome);
+		ft.commit();
 	}
 
 }

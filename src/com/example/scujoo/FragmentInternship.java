@@ -18,11 +18,14 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,17 +45,20 @@ public class FragmentInternship extends Fragment implements
 	private List<DatasInternship> listInternship;
 	private AdapterInternship adapterInternship;
 	private ProgressDialog dialog;
-
+	private LinearLayout topCalendar;
+	private FragmentInternship fragmentInternship;
 	private TextView topTitle;
-
 	private SwipeRefreshLayout swipeRefreshLayout;
-
 	private String URL = StaticDatas.URL + "scujoo/internship.php";
+	FragmentManager fm;
+	FragmentTransaction ft;
 
 	private Handler handlerInternship = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			String jsonData = (String) msg.obj;
 			dialog.dismiss();
+			swipeRefreshLayout.setRefreshing(false);
+			topCalendar.setVisibility(View.VISIBLE);
 			try {
 				JSONObject jsonObject = new JSONObject(jsonData);
 				String object = jsonObject.getString("result");
@@ -73,25 +79,22 @@ public class FragmentInternship extends Fragment implements
 		};
 	};
 
-	private Handler myHandler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			if (msg.what == 0x1234) {
-				swipeRefreshLayout.setRefreshing(false);
-			}
-		}
-	};
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_internship,
 				container, false);
-		// 显示正在加载
-		dialog = new ProgressDialog(getActivity());
-		dialog.setMessage("正在加载...");
-		dialog.setIndeterminate(false);
-		dialog.setCancelable(true);
-		dialog.show();
+		fm = getActivity().getSupportFragmentManager();
+		ft = fm.beginTransaction();
+		topCalendar = (LinearLayout) getActivity().findViewById(R.id.id_top_calendar);
+		
+		String callBack = "";
+		try {
+			callBack = getArguments().getString("callBack", "");
+			System.out.println("callBack:" + callBack);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 
 		// 刷新空间的声明
 		swipeRefreshLayout = (SwipeRefreshLayout) rootView
@@ -104,6 +107,18 @@ public class FragmentInternship extends Fragment implements
 						android.R.color.holo_green_dark,
 						android.R.color.holo_orange_dark,
 						android.R.color.holo_red_dark);
+		
+		if (callBack.equals("callBack")) {
+			dialog = new ProgressDialog(getActivity());
+			swipeRefreshLayout.setRefreshing(true);
+		} else {
+			// 显示正在加载
+			dialog = new ProgressDialog(getActivity());
+			dialog.setMessage("正在加载...");
+			dialog.setIndeterminate(false);
+			dialog.setCancelable(true);
+			dialog.show();
+		}
 
 		String url = "default";
 		String content = "default";
@@ -190,8 +205,14 @@ public class FragmentInternship extends Fragment implements
 		return rootView;
 	}
 
+	//刷新界面
 	public void onRefresh() {
-		myHandler.sendEmptyMessageDelayed(0x1234, 2000);
+		fragmentInternship = new FragmentInternship();
+		Bundle bundle = new Bundle();
+		bundle.putString("callBack", "callBack");
+		fragmentInternship.setArguments(bundle);
+		ft.replace(R.id.id_content, fragmentInternship);
+		ft.commit();
 	}
 
 }

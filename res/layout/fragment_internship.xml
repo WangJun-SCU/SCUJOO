@@ -8,15 +8,14 @@
         android:id="@+id/fragment_internship_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-    
-    <ListView
-        android:id="@+id/fragment_internship_listView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
-    </ListView>
-    
+
+        <ListView
+            android:id="@+id/fragment_internship_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" >
+        </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

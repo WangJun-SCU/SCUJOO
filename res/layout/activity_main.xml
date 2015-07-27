@@ -16,6 +16,7 @@
             android:orientation="vertical" >
 
             <include layout="@layout/top" />
+            <include layout="@layout/top_calendar"/>
 
             <FrameLayout
                 android:id="@+id/id_content"

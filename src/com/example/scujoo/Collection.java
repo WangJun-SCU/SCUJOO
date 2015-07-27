@@ -38,7 +38,7 @@ public class Collection extends FragmentActivity implements OnClickListener {
 		showBlue(bottomRecruit);
 		topTitle.setText("校园宣讲");
 		if (fragmentRecruit == null) {
-			fragmentRecruit = new FragmentRecruit();
+			fragmentRecruit = new FragmentRecruitCollection();
 
 			Bundle bundle = new Bundle();
 			bundle.putString("url11",
@@ -81,7 +81,7 @@ public class Collection extends FragmentActivity implements OnClickListener {
 			showBlue(bottomRecruit);
 			topTitle.setText("校园宣讲");
 			if (fragmentRecruit == null) {
-				fragmentRecruit = new FragmentRecruit();
+				fragmentRecruit = new FragmentRecruitCollection();
 
 				Bundle bundle = new Bundle();
 				bundle.putString("url11",
@@ -100,7 +100,7 @@ public class Collection extends FragmentActivity implements OnClickListener {
 			showBlue(bottomDemand);
 			topTitle.setText("需求");
 			if (fragmentDemand == null) {
-				fragmentDemand = new FragmentDemand();
+				fragmentDemand = new FragmentDemandCollection();
 
 				Bundle bundle1 = new Bundle();
 				bundle1.putString("url12",
@@ -119,7 +119,7 @@ public class Collection extends FragmentActivity implements OnClickListener {
 			showBlue(bottomInternship);
 			topTitle.setText("需求");
 			if (fragmentIntership == null) {
-				fragmentIntership = new FragmentInternship();
+				fragmentIntership = new FragmentInternshipCollection();
 
 				Bundle bundle2 = new Bundle();
 				bundle2.putString("url13",

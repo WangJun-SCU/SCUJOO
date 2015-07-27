@@ -37,5 +37,5 @@
             android:src="@drawable/top_search" />
 
     </LinearLayout>
-
+    
 </LinearLayout>

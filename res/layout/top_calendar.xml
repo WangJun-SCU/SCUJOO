@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_top_calendar"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@color/gray"
+    android:orientation="horizontal"
+    android:baselineAligned="false"
+    android:gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/top_calendar_before"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:drawableLeft="@drawable/back"
+            android:gravity="center_vertical"
+            android:text="前一天"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/top_calendar_calendar"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_calendar"
+        android:gravity="center_vertical|center_horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:text="2015-7-26 周日" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@color/gray" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/calendar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/top_calendar_after"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:text="后一天"
+            android:gravity="center_vertical"
+            android:drawableRight="@drawable/back_right"
+            android:textColor="#ffffff" />
+        
+    </LinearLayout>
+
+</LinearLayout>
