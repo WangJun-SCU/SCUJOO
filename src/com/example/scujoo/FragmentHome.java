@@ -192,7 +192,6 @@ public class FragmentHome extends Fragment implements
 
 		@Override
 		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
 			HttpPost httpPost = new HttpPost(URL);
 			HttpResponse httpResponse = null;
 			List<NameValuePair> param = new ArrayList<NameValuePair>();
