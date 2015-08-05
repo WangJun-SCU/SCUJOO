@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -36,6 +37,7 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -52,6 +54,7 @@ public class FragmentRecruitUp extends Fragment implements
 	private ListView listView;
 	private LinearLayout llOutRecruit;
 	private LinearLayout topCalendar;
+	private LinearLayout datePicker;
 	private GridView grid;
 	private ProgressDialog dialog;
 	private View rootView;
@@ -75,6 +78,14 @@ public class FragmentRecruitUp extends Fragment implements
 	private FragmentTransaction ft;
 	private String sDate;
 	private String sWeek;
+	private LinearLayout left;
+	private TextView z01;
+	private TextView z02;
+	private TextView z03;
+	private TextView z04;
+	private TextView z05;
+	private TextView z06;
+	private TextView z07;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +93,27 @@ public class FragmentRecruitUp extends Fragment implements
 		rootView = inflater.inflate(R.layout.fragment_recruit_table, container,
 				false);
 		init();
+
+		/*
+		 * int height1 = left.getHeight() / 7; LinearLayout.LayoutParams params1
+		 * = (LinearLayout.LayoutParams) z01.getLayoutParams();
+		 * LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams)
+		 * z02.getLayoutParams(); LinearLayout.LayoutParams params3 =
+		 * (LinearLayout.LayoutParams) z03.getLayoutParams();
+		 * LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams)
+		 * z04.getLayoutParams(); LinearLayout.LayoutParams params5 =
+		 * (LinearLayout.LayoutParams) z05.getLayoutParams();
+		 * LinearLayout.LayoutParams params6 = (LinearLayout.LayoutParams)
+		 * z06.getLayoutParams(); LinearLayout.LayoutParams params7 =
+		 * (LinearLayout.LayoutParams) z07.getLayoutParams(); params1.height =
+		 * height1; params2.height = height1; params3.height = height1;
+		 * params4.height = height1; params5.height = height1; params6.height =
+		 * height1; params7.height = height1; z01.setLayoutParams(params1);
+		 * z02.setLayoutParams(params2); z03.setLayoutParams(params3);
+		 * z04.setLayoutParams(params4); z05.setLayoutParams(params5);
+		 * z06.setLayoutParams(params6); z07.setLayoutParams(params7);
+		 */
+
 		currentDate.setText(sDate + "   " + sWeek);// 设置当前日期
 
 		Yibu yibu = new Yibu();
@@ -112,6 +144,40 @@ public class FragmentRecruitUp extends Fragment implements
 			dialog.setCancelable(true);
 			dialog.show();
 		}
+		datePicker.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				Calendar cc = Calendar.getInstance();
+				System.out.println("1111111");
+				new DatePickerDialog(getActivity(),
+						new DatePickerDialog.OnDateSetListener() {
+							boolean mFired = false;
+							public void onDateSet(DatePicker view, int year,
+									int monthOfYear, int dayOfMonth) {
+								if (mFired == true) {
+						            return;
+						        } else {
+						            //first time mFired
+						            mFired = true;
+						        }
+								
+								String tDate = "" + year + "-"
+										+ (monthOfYear + 1) + "-" + dayOfMonth;// 获取选择的日期
+								System.out.println(tDate);
+								fragmentRecruit = new FragmentRecruitUp();
+								Bundle bundle = new Bundle();
+								bundle.putString("cDate", tDate);
+								fragmentRecruit.setArguments(bundle);
+								System.out.println("1111111");
+								ft.replace(R.id.id_content, fragmentRecruit);
+								System.out.println("22222222222");
+								ft.commit();
+								System.out.println("33333333333");
+							}
+						}, cc.get(cc.YEAR), cc.get(cc.MONTH), cc
+								.get(cc.DAY_OF_MONTH)).show();
+			}
+		});
 
 		// 添加前一天点击事件
 		before.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +255,18 @@ public class FragmentRecruitUp extends Fragment implements
 				R.id.top_calendar_after);
 		currentDate = (TextView) getActivity().findViewById(
 				R.id.top_calendar_date);
+		datePicker = (LinearLayout) getActivity().findViewById(
+				R.id.top_calendar_calendar);
+		left = (LinearLayout) rootView
+				.findViewById(R.id.fragment_recruit_table_left);
+		z01 = (TextView) rootView.findViewById(R.id.fragment_recruit_table_201);
+		z02 = (TextView) rootView.findViewById(R.id.fragment_recruit_table_209);
+		z03 = (TextView) rootView.findViewById(R.id.fragment_recruit_table_01);
+		z04 = (TextView) rootView.findViewById(R.id.fragment_recruit_table_d5);
+		z05 = (TextView) rootView.findViewById(R.id.fragment_recruit_table_h3);
+		z06 = (TextView) rootView.findViewById(R.id.fragment_recruit_table_w1);
+		z07 = (TextView) rootView.findViewById(R.id.fragment_recruit_table_w2);
+
 		d = new Date();
 		sdf = new SimpleDateFormat("yyyy-MM-dd");
 		date = sdf.format(d);
@@ -235,7 +313,7 @@ public class FragmentRecruitUp extends Fragment implements
 			param.add(new BasicNameValuePair("userName", userName));
 			param.add(new BasicNameValuePair("userPass", userPass));
 			param.add(new BasicNameValuePair("md5", md5));
-			// 判断是否点击了前一天后者后一天回调
+			// 判断是否点击了前一天后者后一天或选择了日期回调
 			String cDate = "";
 			try {
 				cDate = getArguments().getString("cDate", "");

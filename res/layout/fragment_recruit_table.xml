@@ -22,6 +22,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/verygray"
                     android:orientation="horizontal" >
 
                     <TextView
@@ -32,6 +33,7 @@
                         android:gravity="center"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
+                        android:textColor="@color/blue"
                         android:text="今日宣讲" />
 
                     <TextView
@@ -78,57 +80,72 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
+                    android:background="@color/verygray"
                     android:orientation="horizontal" >
 
                     <LinearLayout
+                        android:id="@+id/fragment_recruit_table_left"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="4"
                         android:orientation="vertical" >
 
                         <TextView
+                            android:id="@+id/fragment_recruit_table_201"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
+                            android:background="@drawable/bg_table"
                             android:text="201报告厅" />
 
                         <TextView
+                            android:id="@+id/fragment_recruit_table_209"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
+                            android:background="@drawable/bg_table"
                             android:text="209教室" />
 
                         <TextView
+                            android:id="@+id/fragment_recruit_table_01"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
+                            android:background="@drawable/bg_table"
                             android:text="副楼01" />
 
                         <TextView
+                            android:id="@+id/fragment_recruit_table_d5"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
+                            android:background="@drawable/bg_table"
                             android:text="东五教演播厅" />
 
                         <TextView
+                            android:id="@+id/fragment_recruit_table_h3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
+                            android:background="@drawable/bg_table"
                             android:text="活动中心3楼" />
 
                         <TextView
+                            android:id="@+id/fragment_recruit_table_w1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
+                            android:background="@drawable/bg_table"
                             android:text="文华1楼" />
 
                         <TextView
+                            android:id="@+id/fragment_recruit_table_w2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -141,13 +158,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:background="@drawable/bg_table"
                         android:orientation="vertical" >
 
                         <GridView
                             android:id="@+id/fragment_recruit_table_grid"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_table"
                             android:numColumns="4"
                             android:stretchMode="columnWidth" >
                         </GridView>

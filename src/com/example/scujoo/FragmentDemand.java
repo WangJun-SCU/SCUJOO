@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -66,6 +68,7 @@ public class FragmentDemand extends Fragment implements
 	private String userPass;
 	private String token;
 	private String md5;
+	private LinearLayout datePicker;
 
 	private Handler handlerDemand = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -210,6 +213,35 @@ public class FragmentDemand extends Fragment implements
 				listViewDemand.setSelectionAfterHeaderView();
 			}
 		});
+		datePicker.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				Calendar cc = Calendar.getInstance();
+				new DatePickerDialog(getActivity(),
+						new DatePickerDialog.OnDateSetListener() {
+							boolean mFired = false;
+							public void onDateSet(DatePicker view, int year,
+									int monthOfYear, int dayOfMonth) {
+								if (mFired == true) {
+						            return;
+						        } else {
+						            //first time mFired
+						            mFired = true;
+						        }
+								
+								String tDate = "" + year + "-"
+										+ (monthOfYear + 1) + "-" + dayOfMonth;// 获取选择的日期
+								fragmentDemand = new FragmentDemand();
+								Bundle bundle = new Bundle();
+								bundle.putString("cDate", tDate);
+								fragmentDemand.setArguments(bundle);
+								ft.replace(R.id.id_content, fragmentDemand);
+								ft.commit();
+							}
+						}, cc.get(cc.YEAR), cc.get(cc.MONTH), cc
+								.get(cc.DAY_OF_MONTH)).show();
+			}
+		});
 		// 添加前一天点击事件
 		before.setOnClickListener(new View.OnClickListener() {
 
@@ -278,6 +310,8 @@ public class FragmentDemand extends Fragment implements
 				R.id.top_calendar_before);
 		after = (LinearLayout) getActivity().findViewById(
 				R.id.top_calendar_after);
+		datePicker = (LinearLayout) getActivity().findViewById(
+				R.id.top_calendar_calendar);
 		currentDate = (TextView) getActivity().findViewById(R.id.top_calendar_date);
 		Date d = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

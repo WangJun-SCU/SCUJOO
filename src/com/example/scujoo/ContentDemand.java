@@ -52,6 +52,7 @@ public class ContentDemand extends Activity {
 			+ "scujoo/collect_yn_demand.php";
 	private String userName;
 	private String userPass;
+	private SharedPreferences.Editor editor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class ContentDemand extends Activity {
 			workPlace.setText(result2[5]);
 			intro.setText(result2[6]);
 			others.setText(result2[7]);
-			hits.setText("浏览("+result2[9]+")");
+			hits.setText("浏览(" + result2[9] + ")");
 			if ("200".equals(result2[8])) {
 				collect.setImageResource(R.drawable.collect_full);
 				collect.setTag("2");
@@ -97,44 +98,48 @@ public class ContentDemand extends Activity {
 		collect.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				String tagC = (String) collect.getTag();
-				if ("1".equals(tagC)) {
-					Yibu2 yibu2 = new Yibu2();
-					String result = null;
-					try {
-						result = yibu2.execute().get();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} catch (ExecutionException e) {
-						e.printStackTrace();
-					}
-					if ("200".equals(result)) {
-						Toast.makeText(getApplicationContext(), "收藏成功", 1)
-								.show();
-						collect.setImageResource(R.drawable.collect_full);
-						collect.setTag("2");
-					} else {
-						Toast.makeText(getApplicationContext(), "收藏失败", 1)
-								.show();
-					}
-				} else if ("2".equals(tagC)) {
-					Yibu3 yibu3 = new Yibu3();
-					String result = null;
-					try {
-						result = yibu3.execute().get();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} catch (ExecutionException e) {
-						e.printStackTrace();
-					}
-					if ("200".equals(result)) {
-						Toast.makeText(getApplicationContext(), "取消收藏成功", 1)
-								.show();
-						collect.setImageResource(R.drawable.collect_empty);
-						collect.setTag("1");
-					} else {
-						Toast.makeText(getApplicationContext(), "取消收藏失败", 1)
-								.show();
+				if (userName.equals("visitor")) {
+					Toast.makeText(ContentDemand.this, "请先登录再收藏", 1).show();
+				} else {
+					String tagC = (String) collect.getTag();
+					if ("1".equals(tagC)) {
+						Yibu2 yibu2 = new Yibu2();
+						String result = null;
+						try {
+							result = yibu2.execute().get();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} catch (ExecutionException e) {
+							e.printStackTrace();
+						}
+						if ("200".equals(result)) {
+							Toast.makeText(getApplicationContext(), "收藏成功", 1)
+									.show();
+							collect.setImageResource(R.drawable.collect_full);
+							collect.setTag("2");
+						} else {
+							Toast.makeText(getApplicationContext(), "收藏失败", 1)
+									.show();
+						}
+					} else if ("2".equals(tagC)) {
+						Yibu3 yibu3 = new Yibu3();
+						String result = null;
+						try {
+							result = yibu3.execute().get();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} catch (ExecutionException e) {
+							e.printStackTrace();
+						}
+						if ("200".equals(result)) {
+							Toast.makeText(getApplicationContext(), "取消收藏成功", 1)
+									.show();
+							collect.setImageResource(R.drawable.collect_empty);
+							collect.setTag("1");
+						} else {
+							Toast.makeText(getApplicationContext(), "取消收藏失败", 1)
+									.show();
+						}
 					}
 				}
 			}
@@ -158,6 +163,7 @@ public class ContentDemand extends Activity {
 
 		SharedPreferences sp = getSharedPreferences("datas",
 				Activity.MODE_PRIVATE);
+		editor = sp.edit();
 		userName = sp.getString("userName", "");
 		userPass = sp.getString("userPass", "");
 	}

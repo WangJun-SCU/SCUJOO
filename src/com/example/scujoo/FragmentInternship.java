@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -66,6 +68,7 @@ public class FragmentInternship extends Fragment implements
 	private TextView currentDate;
 	private String sDate;
 	private String sWeek;
+	private LinearLayout datePicker;
 
 	private Handler handlerInternship = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -207,7 +210,35 @@ public class FragmentInternship extends Fragment implements
 				listViewInternship.setSelectionAfterHeaderView();
 			}
 		});
-		
+		datePicker.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				Calendar cc = Calendar.getInstance();
+				new DatePickerDialog(getActivity(),
+						new DatePickerDialog.OnDateSetListener() {
+							boolean mFired = false;
+							public void onDateSet(DatePicker view, int year,
+									int monthOfYear, int dayOfMonth) {
+								if (mFired == true) {
+						            return;
+						        } else {
+						            //first time mFired
+						            mFired = true;
+						        }
+								
+								String tDate = "" + year + "-"
+										+ (monthOfYear + 1) + "-" + dayOfMonth;// 获取选择的日期
+								fragmentInternship = new FragmentInternship();
+								Bundle bundle = new Bundle();
+								bundle.putString("cDate", tDate);
+								fragmentInternship.setArguments(bundle);
+								ft.replace(R.id.id_content, fragmentInternship);
+								ft.commit();
+							}
+						}, cc.get(cc.YEAR), cc.get(cc.MONTH), cc
+								.get(cc.DAY_OF_MONTH)).show();
+			}
+		});
 		before.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
@@ -269,6 +300,8 @@ public class FragmentInternship extends Fragment implements
 		ft = fm.beginTransaction();
 		topCalendar = (LinearLayout) getActivity().findViewById(
 				R.id.id_top_calendar);
+		datePicker = (LinearLayout) getActivity().findViewById(
+				R.id.top_calendar_calendar);
 		// 刷新空间的声明
 		swipeRefreshLayout = (SwipeRefreshLayout) rootView
 				.findViewById(R.id.fragment_internship_refresh);

@@ -76,4 +76,15 @@
         android:textColor="#ffffff"
         android:text="登录" />
 
+    <Button
+        android:id="@+id/login_visitor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right|center_vertical"
+        android:textSize="14sp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/deepblue"
+        android:background="#0000"
+        android:text="随便逛逛..." />
+
 </LinearLayout>

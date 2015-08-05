@@ -58,6 +58,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private SwipeRefreshLayout swipeRefreshLayout;
 	FragmentManager fm;
 	FragmentTransaction ft1;
+	private String userName;
+	private SharedPreferences.Editor editor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +159,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private void init() {
 		SharedPreferences sp = getSharedPreferences("datas",
 				Activity.MODE_PRIVATE);
+		editor = sp.edit(); 
 
 		nouse1 = (TextView) findViewById(R.id.drawer_left_1);
 		nouse2 = (TextView) findViewById(R.id.drawer_left_2);
@@ -178,6 +181,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		name = (TextView) findViewById(R.id.drawer_left_name);
 
 		name.setText(sp.getString("name", ""));
+		userName = sp.getString("userName", "");
 
 		head = (CircleImageView) findViewById(R.id.drawer_left_head);
 
@@ -234,7 +238,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			topTitleStr = (String) topTitle.getText();
 			fragmentRecruitUp = new FragmentRecruitUp();
 			System.out.println("5555");
-			ft1.replace(R.id.id_content,fragmentRecruitUp);
+			ft1.replace(R.id.id_content, fragmentRecruitUp);
 			System.out.println("666");
 			ft1.commit();
 			System.out.println("7777");
@@ -264,15 +268,32 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			drawerLayout.openDrawer(mainLeft);
 			break;
 		case R.id.drawer_left_personal:
-			startActivity(new Intent().setClass(MainActivity.this,
-					PersonalMessage.class));
+			if (userName.equals("visitor")) {
+				editor.remove("userName");
+				editor.remove("userPass");
+				editor.commit();
+				startActivity(new Intent().setClass(MainActivity.this,Login.class));
+				finish();
+			} else {
+				startActivity(new Intent().setClass(MainActivity.this,PersonalMessage.class));
+			}
 			break;
 		case R.id.drawer_left_more:
 			startActivity(new Intent().setClass(MainActivity.this, More.class));
 			break;
 		case R.id.drawer_left_collection:
-			startActivity(new Intent().setClass(MainActivity.this,
-					Collection.class));
+			if(userName.equals("visitor"))
+			{
+				editor.remove("userName");
+				editor.remove("userPass");
+				editor.commit();
+				startActivity(new Intent().setClass(MainActivity.this,Login.class));
+				finish();
+			}else
+			{
+				startActivity(new Intent().setClass(MainActivity.this,
+						Collection.class));
+			}
 			break;
 		case R.id.top_search:
 			Intent intent = new Intent();

@@ -1,9 +1,9 @@
 package com.example.scujoo;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -34,8 +34,9 @@ import com.scujoo.utils.Md5;
 public class Login extends Activity {
 	
 	private Button login;
+	private Button visitor;
 	private String URL = StaticDatas.URL + "scujoo/login.php";
-
+	private String URLVisitor = StaticDatas.URL + "scujoo/login_visitor.php";
 	private EditText userName;
 	private EditText userPass;
 	private ProgressDialog pDialog;
@@ -60,7 +61,7 @@ public class Login extends Activity {
 		}
 		
 		init();
-		
+		//登录事件
 		login.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -74,11 +75,20 @@ public class Login extends Activity {
 				}
 			}
 		});
+		//访客进入事件
+		visitor.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Yibu2 yb = new Yibu2();
+				yb.execute();
+			}
+		});
 	}
 
 	//初始化组件
 	private void init() {
 		login = (Button) findViewById(R.id.login_id);
+		visitor = (Button) findViewById(R.id.login_visitor);
 		userName = (EditText) findViewById(R.id.login_username);
 		userPass = (EditText) findViewById(R.id.login_userpass);
 	}
@@ -189,6 +199,83 @@ public class Login extends Activity {
 				
 			}
         }
+	}
+	class Yibu2 extends AsyncTask<String, String, String>
+	{
+		@Override
+		 protected void onPreExecute() {
+	            super.onPreExecute();
+	            pDialog = new ProgressDialog(Login.this);
+	            pDialog.setMessage("正在进入...");
+	            pDialog.setIndeterminate(false);
+	            pDialog.setCancelable(true);
+	            pDialog.show();
+	            System.out.println("888");
+	        }
+
+		@Override
+		protected String doInBackground(String... params) {
+			String userName = "visitor";
+			String userPass = "visitor";
+			String token;
+			token = "userName=" + userName+ "&userPass="+ userPass + "token";
+			md5 = Md5.Md5Str(token);
+			List<NameValuePair> param = new ArrayList<NameValuePair>();
+			param.add(new BasicNameValuePair("userName", userName));
+			param.add(new BasicNameValuePair("userPass", userPass));
+			param.add(new BasicNameValuePair("md5", md5));
+			HttpPost httpPost = new HttpPost(URLVisitor);
+			HttpResponse httpResponse = null;
+			try {
+				httpPost.setEntity(new UrlEncodedFormEntity(param,HTTP.UTF_8));
+				httpResponse = new DefaultHttpClient().execute(httpPost);
+				if(httpResponse.getStatusLine().getStatusCode()==200)
+				{
+					String result = EntityUtils.toString(httpResponse.getEntity());
+					System.out.println("Login-result:"+result);
+					return result;
+				}else{
+					return null;
+				}
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				return null;
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				return null;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			pDialog.dismiss();
+			System.out.println("777");
+			if(result.equals("200"))
+			{
+				System.out.println("111");
+				SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
+				SharedPreferences.Editor editor = sp.edit();
+				editor.putString("userName", "visitor");
+				editor.putString("userPass", "visitor");
+				editor.putString("name", "访客");
+				System.out.println("222");
+				editor.commit();
+				System.out.println("333");
+				Toast.makeText(getApplicationContext(), "访问成功", 1).show();
+				System.out.println("444");
+				startActivity(new Intent().setClass(Login.this,MainActivity.class));
+				System.out.println("555");
+				finish();
+				System.out.println("666");
+			}else{
+				Toast.makeText(Login.this, "访问异常", 1).show();
+			}
+		}
+		
+		
 	}
 
 }
