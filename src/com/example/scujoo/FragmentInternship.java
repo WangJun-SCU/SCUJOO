@@ -57,25 +57,32 @@ public class FragmentInternship extends Fragment implements
 	private String URL = StaticDatas.URL + "scujoo/internship_date.php";
 	private LinearLayout before;
 	private LinearLayout after;
-	FragmentManager fm;
-	FragmentTransaction ft;
-	View rootView;
-	SharedPreferences sp;
-	String userName;
-	String userPass;
-	String token;
-	String md5;
+	private FragmentManager fm;
+	private FragmentTransaction ft;
+	private View rootView;
+	private SharedPreferences sp;
+	private SharedPreferences.Editor editor;
+	private String userName;
+	private String userPass;
+	private String token;
+	private String md5;
 	private TextView currentDate;
 	private String sDate;
 	private String sWeek;
 	private LinearLayout datePicker;
+	private com.example.scujoo.CustomFAB floatButton;
+	private String url = "";
 
 	private Handler handlerInternship = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			String jsonData = (String) msg.obj;
 			dialog.dismiss();
+			if (url.equals("")) {
+				topCalendar.setVisibility(View.VISIBLE);
+			} else {
+				topCalendar.setVisibility(View.GONE);
+			}
 			swipeRefreshLayout.setRefreshing(false);
-			topCalendar.setVisibility(View.VISIBLE);
 			try {
 				JSONObject jsonObject = new JSONObject(jsonData);
 				String object = jsonObject.getString("result");
@@ -133,7 +140,6 @@ public class FragmentInternship extends Fragment implements
 			dialog.show();
 		}
 
-		String url = "default";
 		String content = "default";
 		String select = "default";
 		try {
@@ -145,6 +151,16 @@ public class FragmentInternship extends Fragment implements
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			editor.remove("floatTag");
+			editor.commit();
+		}
+
+		// 设置悬浮按钮
+		String tag = sp.getString("floatTag", "");
+		if (tag.equals("")) {
+			floatButton.setImageResource(R.drawable.list_folat);
+		} else {
+			floatButton.setImageResource(R.drawable.can_float);
 		}
 
 		listViewInternship.setAdapter(adapterInternship);
@@ -167,7 +183,7 @@ public class FragmentInternship extends Fragment implements
 		}
 		if (cDate != "") {
 			params.add(new BasicNameValuePair("date", cDate));
-		}else{
+		} else {
 			params.add(new BasicNameValuePair("date", sDate));
 		}
 
@@ -217,15 +233,16 @@ public class FragmentInternship extends Fragment implements
 				new DatePickerDialog(getActivity(),
 						new DatePickerDialog.OnDateSetListener() {
 							boolean mFired = false;
+
 							public void onDateSet(DatePicker view, int year,
 									int monthOfYear, int dayOfMonth) {
 								if (mFired == true) {
-						            return;
-						        } else {
-						            //first time mFired
-						            mFired = true;
-						        }
-								
+									return;
+								} else {
+									// first time mFired
+									mFired = true;
+								}
+
 								String tDate = "" + year + "-"
 										+ (monthOfYear + 1) + "-" + dayOfMonth;// 获取选择的日期
 								fragmentInternship = new FragmentInternship();
@@ -243,19 +260,19 @@ public class FragmentInternship extends Fragment implements
 
 			public void onClick(View v) {
 				String[] ss = currentDate.getText().toString().split("  ");
-				String tDate = ss[0];//获取标题栏上的日期
-				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		        Date dt=new Date();
+				String tDate = ss[0];// 获取标题栏上的日期
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date dt = new Date();
 				try {
 					dt = sdf.parse(tDate);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-		        Calendar rightNow = Calendar.getInstance();
-		        rightNow.setTime(dt);
-		        rightNow.add(Calendar.DAY_OF_YEAR,-1);//日期加10天
-		        Date dt1=rightNow.getTime();
-		        String reStr = sdf.format(dt1);//标题栏其日期减一天
+				Calendar rightNow = Calendar.getInstance();
+				rightNow.setTime(dt);
+				rightNow.add(Calendar.DAY_OF_YEAR, -1);// 日期加10天
+				Date dt1 = rightNow.getTime();
+				String reStr = sdf.format(dt1);// 标题栏其日期减一天
 				fragmentInternship = new FragmentInternship();
 				Bundle bundle = new Bundle();
 				bundle.putString("cDate", reStr);
@@ -269,20 +286,20 @@ public class FragmentInternship extends Fragment implements
 
 			public void onClick(View v) {
 				String[] ss = currentDate.getText().toString().split("  ");
-				String tDate = ss[0];//获取标题栏上的日期
-				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		        Date dt=new Date();
+				String tDate = ss[0];// 获取标题栏上的日期
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date dt = new Date();
 				try {
 					dt = sdf.parse(tDate);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-		        Calendar rightNow = Calendar.getInstance();
-		        rightNow.setTime(dt);
-		        rightNow.add(Calendar.DAY_OF_YEAR,+1);//日期加10天
-		        Date dt1=rightNow.getTime();
-		        String reStr = sdf.format(dt1);//标题栏其日加一天
-		        fragmentInternship = new FragmentInternship();
+				Calendar rightNow = Calendar.getInstance();
+				rightNow.setTime(dt);
+				rightNow.add(Calendar.DAY_OF_YEAR, +1);// 日期加10天
+				Date dt1 = rightNow.getTime();
+				String reStr = sdf.format(dt1);// 标题栏其日加一天
+				fragmentInternship = new FragmentInternship();
 				Bundle bundle = new Bundle();
 				bundle.putString("cDate", reStr);
 				fragmentInternship.setArguments(bundle);
@@ -290,12 +307,45 @@ public class FragmentInternship extends Fragment implements
 				ft.commit();
 			}
 		});
+		// 悬浮按钮点击事件
+		floatButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				String tag = sp.getString("floatTag", "");
+				if (tag.equals("")) {
+					editor.putString("floatTag", "tag");
+					editor.commit();
+					fragmentInternship = new FragmentInternship();
+					Bundle bundle = new Bundle();
+					String url = StaticDatas.URL + "scujoo/internship.php";
+					bundle.putString("url13", url);
+					fragmentInternship.setArguments(bundle);
+					ft.replace(R.id.id_content, fragmentInternship);
+					ft.commit();
+					floatButton.setImageResource(R.drawable.can_float);
+					Toast.makeText(getActivity(), "全部快讯信息", Toast.LENGTH_SHORT)
+							.show();
+				} else if (tag.equals("tag")) {
+					editor.remove("floatTag");
+					editor.commit();
+					floatButton.setTag("date");
+					fragmentInternship = new FragmentInternship();
+					ft.replace(R.id.id_content, fragmentInternship);
+					floatButton.setImageResource(R.drawable.list_folat);
+					ft.commit();
+					Toast.makeText(getActivity(), "日期视图", Toast.LENGTH_SHORT)
+							.show();
+				}
+			}
+		});
 		return rootView;
 	}
 
 	private void init() {
-		before = (LinearLayout) getActivity().findViewById(R.id.top_calendar_before);
-		after = (LinearLayout) getActivity().findViewById(R.id.top_calendar_after);
+		before = (LinearLayout) getActivity().findViewById(
+				R.id.top_calendar_before);
+		after = (LinearLayout) getActivity().findViewById(
+				R.id.top_calendar_after);
 		fm = getActivity().getSupportFragmentManager();
 		ft = fm.beginTransaction();
 		topCalendar = (LinearLayout) getActivity().findViewById(
@@ -306,6 +356,7 @@ public class FragmentInternship extends Fragment implements
 		swipeRefreshLayout = (SwipeRefreshLayout) rootView
 				.findViewById(R.id.fragment_internship_refresh);
 		sp = getActivity().getSharedPreferences("datas", Activity.MODE_PRIVATE);
+		editor = sp.edit();
 		userName = sp.getString("userName", "");
 		userPass = sp.getString("userPass", "");
 		token = "userName=" + userName + "&userPass=" + userPass + "token";
@@ -322,16 +373,30 @@ public class FragmentInternship extends Fragment implements
 		listInternship = new ArrayList<DatasInternship>();
 		adapterInternship = new AdapterInternship(rootView.getContext(),
 				listInternship);
+		floatButton = (CustomFAB) rootView
+				.findViewById(R.id.fragment_internship_float);
 	}
 
 	// 刷新界面
 	public void onRefresh() {
-		fragmentInternship = new FragmentInternship();
-		Bundle bundle = new Bundle();
-		bundle.putString("callBack", "callBack");
-		fragmentInternship.setArguments(bundle);
-		ft.replace(R.id.id_content, fragmentInternship);
-		ft.commit();
+		String tag = sp.getString("floatTag", "");
+		if(tag.equals("tag"))
+		{
+			fragmentInternship = new FragmentInternship();
+			Bundle bundle = new Bundle();
+			String url = StaticDatas.URL + "scujoo/internship.php";
+			bundle.putString("callBack", "callBack");
+			bundle.putString("url13", url);
+			fragmentInternship.setArguments(bundle);
+			ft.replace(R.id.id_content, fragmentInternship);
+			ft.commit();
+		}else{
+			fragmentInternship = new FragmentInternship();
+			Bundle bundle = new Bundle();
+			bundle.putString("callBack", "callBack");
+			fragmentInternship.setArguments(bundle);
+			ft.replace(R.id.id_content, fragmentInternship);
+			ft.commit();
+		}
 	}
-
 }

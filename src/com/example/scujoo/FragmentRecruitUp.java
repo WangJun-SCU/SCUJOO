@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,15 +37,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.scujoo.adapter.AdapterRecruit;
+import com.scujoo.adapter.AdapterRecruitTable;
 import com.scujoo.datas.DatasRecruit;
 import com.scujoo.datas.StaticDatas;
 import com.scujoo.utils.Md5;
@@ -59,6 +63,7 @@ public class FragmentRecruitUp extends Fragment implements
 	private ProgressDialog dialog;
 	private View rootView;
 	private String[] s28 = new String[28];
+	private DatasRecruit[] arrRecruit = new DatasRecruit[28];
 	private SharedPreferences preferences;
 	private String userName;
 	private String userPass;
@@ -68,12 +73,14 @@ public class FragmentRecruitUp extends Fragment implements
 	private SimpleDateFormat sdf;
 	private String date;
 	private AdapterRecruit adapterRecruit;
+	private AdapterRecruitTable adapter2;
 	private List<DatasRecruit> listRecruit;
 	private SwipeRefreshLayout swipe;
 	private LinearLayout before;
 	private LinearLayout after;
 	private TextView currentDate;
 	private FragmentRecruitUp fragmentRecruit;
+	private FragmentRecruitCollection fragmentRecruitC;
 	private FragmentManager fm;
 	private FragmentTransaction ft;
 	private String sDate;
@@ -86,6 +93,7 @@ public class FragmentRecruitUp extends Fragment implements
 	private TextView z05;
 	private TextView z06;
 	private TextView z07;
+	private com.example.scujoo.CustomFAB floatButton;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,26 +101,6 @@ public class FragmentRecruitUp extends Fragment implements
 		rootView = inflater.inflate(R.layout.fragment_recruit_table, container,
 				false);
 		init();
-
-		/*
-		 * int height1 = left.getHeight() / 7; LinearLayout.LayoutParams params1
-		 * = (LinearLayout.LayoutParams) z01.getLayoutParams();
-		 * LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams)
-		 * z02.getLayoutParams(); LinearLayout.LayoutParams params3 =
-		 * (LinearLayout.LayoutParams) z03.getLayoutParams();
-		 * LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams)
-		 * z04.getLayoutParams(); LinearLayout.LayoutParams params5 =
-		 * (LinearLayout.LayoutParams) z05.getLayoutParams();
-		 * LinearLayout.LayoutParams params6 = (LinearLayout.LayoutParams)
-		 * z06.getLayoutParams(); LinearLayout.LayoutParams params7 =
-		 * (LinearLayout.LayoutParams) z07.getLayoutParams(); params1.height =
-		 * height1; params2.height = height1; params3.height = height1;
-		 * params4.height = height1; params5.height = height1; params6.height =
-		 * height1; params7.height = height1; z01.setLayoutParams(params1);
-		 * z02.setLayoutParams(params2); z03.setLayoutParams(params3);
-		 * z04.setLayoutParams(params4); z05.setLayoutParams(params5);
-		 * z06.setLayoutParams(params6); z07.setLayoutParams(params7);
-		 */
 
 		currentDate.setText(sDate + "   " + sWeek);// 设置当前日期
 
@@ -152,15 +140,16 @@ public class FragmentRecruitUp extends Fragment implements
 				new DatePickerDialog(getActivity(),
 						new DatePickerDialog.OnDateSetListener() {
 							boolean mFired = false;
+
 							public void onDateSet(DatePicker view, int year,
 									int monthOfYear, int dayOfMonth) {
 								if (mFired == true) {
-						            return;
-						        } else {
-						            //first time mFired
-						            mFired = true;
-						        }
-								
+									return;
+								} else {
+									// first time mFired
+									mFired = true;
+								}
+
 								String tDate = "" + year + "-"
 										+ (monthOfYear + 1) + "-" + dayOfMonth;// 获取选择的日期
 								System.out.println(tDate);
@@ -231,6 +220,45 @@ public class FragmentRecruitUp extends Fragment implements
 				ft.commit();
 			}
 		});
+		floatButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				fragmentRecruitC = new FragmentRecruitCollection();
+				Bundle bundle = new Bundle();
+				bundle.putString("float", "float");
+				fragmentRecruitC.setArguments(bundle);
+				ft.replace(R.id.id_content, fragmentRecruitC);
+				ft.commit();
+				topCalendar.setVisibility(View.GONE);
+				Toast.makeText(getActivity(), "全部宣讲信息", Toast.LENGTH_SHORT)
+						.show();
+			}
+		});
+
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				DatasRecruit datasRecruit = listRecruit.get(position);
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), ContentRecruit.class);
+				intent.putExtra("id", datasRecruit.getId());
+				startActivity(intent);
+			}
+		});
+		grid.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				DatasRecruit datasRecruit = arrRecruit[position];
+				if (!datasRecruit.getName().equals("")) {
+					Intent intent = new Intent();
+					intent.setClass(getActivity(), ContentRecruit.class);
+					intent.putExtra("id", datasRecruit.getId());
+					startActivity(intent);
+				}
+			}
+		});
 
 		return rootView;
 	}
@@ -282,6 +310,11 @@ public class FragmentRecruitUp extends Fragment implements
 		String token = "userName=" + userName + "&userPass=" + userPass
 				+ "token";
 		md5 = Md5.Md5Str(token);
+		floatButton = (CustomFAB) rootView
+				.findViewById(R.id.fragment_recruit_float);
+		for (int i = 0; i < arrRecruit.length; i++) {
+			arrRecruit[i] = new DatasRecruit("", "", "", "");
+		}
 	}
 
 	// 动态获取ListView的高度
@@ -364,100 +397,251 @@ public class FragmentRecruitUp extends Fragment implements
 					JSONObject obj2 = array.getJSONObject(i);
 					String[] s = obj2.getString("recruitTime").split(" ");
 					String time = s[1];
-					String recruitPlace = obj2.getString("recruitPlace");
+					String recruitPlace = obj2.getString("recruitPlace").trim();
 					String name = obj2.getString("name");
 					System.out.print("time:" + time + "place:" + recruitPlace
 							+ "name:" + name + "\n");
-					if (!"09:30:00".equals(time)) {
+					if ((recruitPlace.equals("就业指导中心201报告厅"))
+							&& (time.equals("09:30:00") || time
+									.equals("09:00:00"))) {
+						// s28[0] = name;
+						arrRecruit[0] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心201报告厅"))
+							&& (time.equals("12:30:00") || time
+									.equals("12:00:00"))) {
+						// s28[1] = name;
+						arrRecruit[1] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心201报告厅"))
+							&& (time.equals("15:00:00") || time
+									.equals("15:30:00"))) {
+						// s28[2] = name;
+						arrRecruit[2] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心201报告厅"))
+							&& (time.equals("18:30:00")
+									|| time.equals("18:00:00") || time
+										.equals("19:00:00"))) {
+						// s28[3] = name;
+						arrRecruit[3] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心209教室"))
+							&& (time.equals("09:30:00") || time
+									.equals("09:00:00"))) {
+						// s28[4] = name;
+						arrRecruit[4] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心209教室"))
+							&& (time.equals("12:30:00") || time
+									.equals("12:00:00"))) {
+						// s28[5] = name;
+						arrRecruit[5] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心209教室"))
+							&& (time.equals("15:00:00") || time
+									.equals("15:30:00"))) {
+						// s28[6] = name;
+						arrRecruit[6] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心209教室"))
+							&& (time.equals("18:30:00")
+									|| time.equals("18:00:00") || time
+										.equals("19:00:00"))) {
+						// s28[7] = name;
+						arrRecruit[7] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心附楼01教室"))
+							&& (time.equals("09:30:00") || time
+									.equals("09:00:00"))) {
+						// s28[8] = name;
+						arrRecruit[8] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心附楼01教室"))
+							&& (time.equals("12:30:00") || time
+									.equals("12:00:00"))) {
+						// s28[9] = name;
+						arrRecruit[9] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心附楼01教室"))
+							&& (time.equals("15:00:00") || time
+									.equals("15:30:00"))) {
+						// s28[10] = name;
+						arrRecruit[10] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("就业指导中心附楼01教室"))
+							&& (time.equals("18:30:00")
+									|| time.equals("18:00:00") || time
+										.equals("19:00:00"))) {
+						// s28[11] = name;
+						arrRecruit[11] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("西五教演播厅") || recruitPlace
+							.equals("西区五教演播厅"))
+							&& (time.equals("09:30:00") || time
+									.equals("09:00:00"))) {
+						// s28[12] = name;
+						arrRecruit[12] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("西五教演播厅") || recruitPlace
+							.equals("西区五教演播厅"))
+							&& (time.equals("12:30:00") || time
+									.equals("12:00:00"))) {
+						// s28[13] = name;
+						arrRecruit[13] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("西五教演播厅") || recruitPlace
+							.equals("西区五教演播厅"))
+							&& (time.equals("15:00:00") || time
+									.equals("15:30:00"))) {
+						// s28[14] = name;
+						arrRecruit[14] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("西五教演播厅") || recruitPlace
+							.equals("西区五教演播厅"))
+							&& (time.equals("18:30:00")
+									|| time.equals("18:00:00") || time
+										.equals("19:00:00"))) {
+						// s28[15] = name;
+						arrRecruit[15] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("西区活动中心三楼大厅"))
+							&& (time.equals("09:30:00") || time
+									.equals("09:00:00"))) {
+						// s28[16] = name;
+						arrRecruit[16] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("西区活动中心三楼大厅"))
+							&& (time.equals("12:30:00") || time
+									.equals("12:00:00"))) {
+						// s28[17] = name;
+						arrRecruit[17] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("西区活动中心三楼大厅"))
+							&& (time.equals("15:00:00") || time
+									.equals("15:30:00"))) {
+						// s28[18] = name;
+						arrRecruit[18] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("西区活动中心三楼大厅"))
+							&& (time.equals("18:30:00")
+									|| time.equals("18:00:00") || time
+										.equals("19:00:00"))) {
+						// s28[19] = name;
+						arrRecruit[19] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("文华活动中心一楼放映厅"))
+							&& (time.equals("09:30:00") || time
+									.equals("09:00:00"))) {
+						// s28[20] = name;
+						arrRecruit[20] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("文华活动中心一楼放映厅"))
+							&& (time.equals("12:30:00") || time
+									.equals("12:00:00"))) {
+						// s28[21] = name;
+						arrRecruit[21] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("文华活动中心一楼放映厅"))
+							&& (time.equals("15:00:00") || time
+									.equals("15:30:00"))) {
+						// s28[22] = name;
+						arrRecruit[22] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("文华活动中心一楼放映厅"))
+							&& (time.equals("18:30:00")
+									|| time.equals("18:00:00") || time
+										.equals("19:00:00"))) {
+						// s28[23] = name;
+						arrRecruit[23] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("文华活动中心二楼报告厅"))
+							&& (time.equals("09:30:00") || time
+									.equals("09:00:00"))) {
+						// s28[24] = name;
+						arrRecruit[24] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("文华活动中心二楼报告厅"))
+							&& (time.equals("12:30:00") || time
+									.equals("12:00:00"))) {
+						// s28[25] = name;
+						arrRecruit[25] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("文华活动中心二楼报告厅"))
+							&& (time.equals("15:00:00") || time
+									.equals("15:30:00"))) {
+						// s28[26] = name;
+						arrRecruit[26] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else if ((recruitPlace.equals("文华活动中心二楼报告厅"))
+							&& (time.equals("18:30:00")
+									|| time.equals("18:00:00") || time
+										.equals("19:00:00"))) {
+						// s28[27] = name;
+						arrRecruit[27] = new DatasRecruit(obj2.getString("id"),
+								obj2.getString("name"),
+								obj2.getString("recruitTime"),
+								obj2.getString("recruitPlace"));
+					} else {
 						System.out.println(time);
 						listRecruit.add(new DatasRecruit(obj2.getString("id"),
 								obj2.getString("name"), obj2
 										.getString("recruitTime"), obj2
 										.getString("recruitPlace")));
-					} else if ((recruitPlace.equals("就业指导中心201报告厅"))
-							&& (time.equals("09:30:00"))) {
-						s28[0] = name;
-					} else if ((recruitPlace.equals("就业指导中心201报告厅"))
-							&& (time.equals("12:30:00"))) {
-						s28[1] = name;
-					} else if ((recruitPlace.equals("就业指导中心201报告厅"))
-							&& (time.equals("15:00:00"))) {
-						s28[2] = name;
-					} else if ((recruitPlace.equals("就业指导中心201报告厅"))
-							&& (time.equals("18:30:00"))) {
-						s28[3] = name;
-					} else if ((recruitPlace.equals("就业指导中心209教室"))
-							&& (time.equals("09:30:00"))) {
-						s28[4] = name;
-					} else if ((recruitPlace.equals("就业指导中心209教室"))
-							&& (time.equals("12:30:00"))) {
-						s28[5] = name;
-					} else if ((recruitPlace.equals("就业指导中心209教室"))
-							&& (time.equals("15:00:00"))) {
-						s28[6] = name;
-					} else if ((recruitPlace.equals("就业指导中心209教室"))
-							&& (time.equals("18:30:00"))) {
-						s28[7] = name;
-					} else if ((recruitPlace.equals("就业指导中心附楼01教室"))
-							&& (time.equals("09:30:00"))) {
-						s28[8] = name;
-					} else if ((recruitPlace.equals("就业指导中心附楼01教室"))
-							&& (time.equals("12:30:00"))) {
-						s28[9] = name;
-					} else if ((recruitPlace.equals("就业指导中心附楼01教室"))
-							&& (time.equals("15:00:00"))) {
-						s28[10] = name;
-					} else if ((recruitPlace.equals("就业指导中心附楼01教室"))
-							&& (time.equals("18:30:00"))) {
-						s28[11] = name;
-					} else if ((recruitPlace.equals("西五教演播厅"))
-							&& (time.equals("09:30:00"))) {
-						s28[12] = name;
-					} else if ((recruitPlace.equals("西五教演播厅"))
-							&& (time.equals("12:30:00"))) {
-						s28[13] = name;
-					} else if ((recruitPlace.equals("西五教演播厅"))
-							&& (time.equals("15:00:00"))) {
-						s28[14] = name;
-					} else if ((recruitPlace.equals("西五教演播厅"))
-							&& (time.equals("18:30:00"))) {
-						s28[15] = name;
-					} else if ((recruitPlace.equals("西区活动中心三楼大厅"))
-							&& (time.equals("09:30:00"))) {
-						s28[16] = name;
-					} else if ((recruitPlace.equals("西区活动中心三楼大厅"))
-							&& (time.equals("12:30:00"))) {
-						s28[17] = name;
-					} else if ((recruitPlace.equals("西区活动中心三楼大厅"))
-							&& (time.equals("15:00:00"))) {
-						s28[18] = name;
-					} else if ((recruitPlace.equals("西区活动中心三楼大厅"))
-							&& (time.equals("18:30:00"))) {
-						s28[19] = name;
-					} else if ((recruitPlace.equals("文华活动中心一楼放映厅"))
-							&& (time.equals("09:30:00"))) {
-						s28[20] = name;
-					} else if ((recruitPlace.equals("文华活动中心一楼放映厅"))
-							&& (time.equals("12:30:00"))) {
-						s28[21] = name;
-					} else if ((recruitPlace.equals("文华活动中心一楼放映厅"))
-							&& (time.equals("15:00:00"))) {
-						s28[22] = name;
-					} else if ((recruitPlace.equals("文华活动中心一楼放映厅"))
-							&& (time.equals("18:30:00"))) {
-						s28[23] = name;
-					} else if ((recruitPlace.equals("文华活动中心二楼报告厅"))
-							&& (time.equals("09:30:00"))) {
-						s28[24] = name;
-					} else if ((recruitPlace.equals("文华活动中心二楼报告厅"))
-							&& (time.equals("12:30:00"))) {
-						s28[25] = name;
-					} else if ((recruitPlace.equals("文华活动中心二楼报告厅"))
-							&& (time.equals("15:00:00"))) {
-						s28[26] = name;
-					} else if ((recruitPlace.equals("文华活动中心二楼报告厅"))
-							&& (time.equals("18:30:00"))) {
-						s28[27] = name;
 					}
 
 				}
@@ -475,38 +659,32 @@ public class FragmentRecruitUp extends Fragment implements
 			llOutRecruit.setLayoutParams(params);
 
 			// 自定义适配器
-			BaseAdapter adapter2 = new BaseAdapter() {
-				public View getView(int position, View convertView,
-						ViewGroup parent) {
-					convertView = LayoutInflater.from(rootView.getContext())
-							.inflate(R.layout.list_table, null);
-
-					int height = grid.getHeight();
-					int width = grid.getWidth();
-					GridView.LayoutParams params = new GridView.LayoutParams(
-							width / 4, height / 7);
-					TextView tv = (TextView) convertView
-							.findViewById(R.id.id_list_table);
-					tv.setText(s28[position]);
-					convertView.setLayoutParams(params);
-					return convertView;
-				}
-
-				public long getItemId(int position) {
-					return position;
-				}
-
-				public Object getItem(int position) {
-					return null;
-				}
-
-				public int getCount() {
-					return 28;
-				}
-			};
+			/*
+			 * BaseAdapter adapter2 = new BaseAdapter() { public View
+			 * getView(int position, View convertView, ViewGroup parent) {
+			 * convertView = LayoutInflater.from(rootView.getContext())
+			 * .inflate(R.layout.list_table, null);
+			 * 
+			 * int height = grid.getHeight(); int width = grid.getWidth();
+			 * GridView.LayoutParams params = new GridView.LayoutParams( width /
+			 * 4, height / 7); TextView tv = (TextView) convertView
+			 * .findViewById(R.id.id_list_table); tv.setText(s28[position]);
+			 * convertView.setLayoutParams(params); return convertView; }
+			 * 
+			 * public long getItemId(int position) { return position; }
+			 * 
+			 * public Object getItem(int position) { return null; }
+			 * 
+			 * public int getCount() { return 28; } };
+			 */
+			int height = grid.getHeight();
+			int width = grid.getWidth();
+			GridView.LayoutParams params1 = new GridView.LayoutParams(
+					width / 4, height / 7);
+			adapter2 = new AdapterRecruitTable(rootView.getContext(),
+					arrRecruit, params1);
 			grid.setAdapter(adapter2);
 		}
-
 	}
 
 	public void onRefresh() {

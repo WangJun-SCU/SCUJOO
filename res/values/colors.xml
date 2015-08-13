@@ -9,5 +9,7 @@
     <color name="deepblue">#005757</color>
     <color name="transparent">#00000000</color>
     <color name="offwhite">#d0d0d0</color>
+    <color name="purple">#8600FF</color>
+    <color name="tgray">#03FCFCFC</color>
     
 </resources>

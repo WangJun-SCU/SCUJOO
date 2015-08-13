@@ -272,6 +272,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				editor.remove("userName");
 				editor.remove("userPass");
 				editor.commit();
+				Toast.makeText(MainActivity.this, "ÏÈµÇÂ¼Å¶£¬Ç×£¡", 1).show();
 				startActivity(new Intent().setClass(MainActivity.this,Login.class));
 				finish();
 			} else {
@@ -287,6 +288,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				editor.remove("userName");
 				editor.remove("userPass");
 				editor.commit();
+				Toast.makeText(MainActivity.this, "ÏÈµÇÂ¼Å¶£¬Ç×£¡", 1).show();
 				startActivity(new Intent().setClass(MainActivity.this,Login.class));
 				finish();
 			}else

@@ -49,9 +49,9 @@ public class AdapterInternship extends BaseAdapter {
 
 		datasInternship = listInternship.get(position);
 		
-		name.setText(datasInternship.getName());
-		publishTime.setText(datasInternship.getPublishTime());
-		positionDemand.setText(datasInternship.getPosition());
+		name.setText(datasInternship.getName().trim());
+		publishTime.setText(datasInternship.getPublishTime().trim());
+		positionDemand.setText(datasInternship.getPosition().trim());
 		
 		return convertView;
 	}

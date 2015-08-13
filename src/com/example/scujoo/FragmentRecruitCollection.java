@@ -18,12 +18,15 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,8 +45,11 @@ public class FragmentRecruitCollection extends Fragment implements
 	private AdapterRecruit adapterRecruit;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private ProgressDialog dialog;
-
+	private FragmentManager fm;
+	private FragmentTransaction ft;
 	private TextView topTitle;
+	private FragmentRecruitUp fragmentRecruit;
+	private com.example.scujoo.CustomFAB floatButton;
 
 	private String URL = StaticDatas.URL + "scujoo/recruit.php";
 
@@ -84,6 +90,38 @@ public class FragmentRecruitCollection extends Fragment implements
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_recruit, container,
 				false);
+		floatButton = (CustomFAB) rootView
+				.findViewById(R.id.fragment_recruit_float1);
+		String floatC = "";
+		try {
+			floatC = getArguments().getString("float","");
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.out.println("floatC:"+floatC);
+		if(floatC.equals("float"))
+		{
+			floatButton.setVisibility(View.VISIBLE);
+		}else{
+			floatButton.setVisibility(View.INVISIBLE);
+		}
+		floatButton.setImageResource(R.drawable.can_float);
+		fm = getActivity().getSupportFragmentManager();
+		ft = fm.beginTransaction();
+		floatButton.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				fragmentRecruit = new FragmentRecruitUp();
+				Bundle bundle = new Bundle();
+				bundle.putString("float", "float");
+				fragmentRecruit.setArguments(bundle);
+				ft.replace(R.id.id_content, fragmentRecruit);
+				ft.commit();
+				Toast.makeText(getActivity(), "日历视图", Toast.LENGTH_SHORT)
+						.show();
+			}
+		});
 		// 显示正在加载
 		dialog = new ProgressDialog(getActivity());
 		dialog.setMessage("正在加载...");

@@ -43,6 +43,7 @@ public class FragmentInternshipCollection extends Fragment implements
 	private List<DatasInternship> listInternship;
 	private AdapterInternship adapterInternship;
 	private ProgressDialog dialog;
+	private com.example.scujoo.CustomFAB floatButton;
 
 	private TextView topTitle;
 
@@ -93,6 +94,9 @@ public class FragmentInternshipCollection extends Fragment implements
 		dialog.setIndeterminate(false);
 		dialog.setCancelable(true);
 		dialog.show();
+		
+		floatButton = (CustomFAB) rootView.findViewById(R.id.fragment_internship_float);
+		floatButton.setVisibility(View.INVISIBLE);
 
 		// 刷新空间的声明
 		swipeRefreshLayout = (SwipeRefreshLayout) rootView

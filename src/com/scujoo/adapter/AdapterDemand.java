@@ -48,9 +48,9 @@ public class AdapterDemand extends BaseAdapter {
 
 		datasDemand = listDemand.get(position);
 		
-		name.setText(datasDemand.getName());
-		publishTime.setText(datasDemand.getPublishTime());
-		positionDemand.setText(datasDemand.getPosition());
+		name.setText(datasDemand.getName().trim());
+		publishTime.setText(datasDemand.getPublishTime().trim());
+		positionDemand.setText(datasDemand.getPosition().trim());
 		
 		return convertView;
 	}

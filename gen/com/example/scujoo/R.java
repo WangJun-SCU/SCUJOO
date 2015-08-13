@@ -12,6 +12,19 @@ public final class R {
         public static final int items=0x7f040000;
     }
     public static final class attr {
+        /**  Background color 
+         <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+         */
+        public static final int bg_color=0x7f010002;
+        /** <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+         */
+        public static final int bg_color_pressed=0x7f010003;
         /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
 <p>This may also be a reference to a resource (in the form
@@ -39,6 +52,8 @@ containing a value of this type.
         public static final int lightblue=0x7f050004;
         public static final int lightgray=0x7f050002;
         public static final int offwhite=0x7f050008;
+        public static final int purple=0x7f050009;
+        public static final int tgray=0x7f05000a;
         public static final int transparent=0x7f050007;
         public static final int verygray=0x7f050001;
         public static final int white=0x7f050005;
@@ -61,39 +76,41 @@ containing a value of this type.
         public static final int bg_login=0x7f02000e;
         public static final int bg_table=0x7f02000f;
         public static final int calendar=0x7f020010;
-        public static final int collect_empty=0x7f020011;
-        public static final int collect_full=0x7f020012;
-        public static final int feedback=0x7f020013;
-        public static final int first_use=0x7f020014;
-        public static final int guide1=0x7f020015;
-        public static final int guide2=0x7f020016;
-        public static final int guide3=0x7f020017;
-        public static final int guide_point=0x7f020018;
-        public static final int guide_point_light=0x7f020019;
-        public static final int head=0x7f02001a;
-        public static final int ic_launcher=0x7f02001b;
-        public static final int per_edit=0x7f02001c;
-        public static final int qr_code=0x7f02001d;
-        public static final int see=0x7f02001e;
-        public static final int select_blue=0x7f02001f;
-        public static final int select_deepblue=0x7f020020;
-        public static final int select_gray=0x7f020021;
-        public static final int select_gray_blue=0x7f020022;
-        public static final int select_trans=0x7f020023;
-        public static final int select_white=0x7f020024;
-        public static final int shadow_table=0x7f020025;
-        public static final int share=0x7f020026;
-        public static final int side_collection=0x7f020027;
-        public static final int side_me=0x7f020028;
-        public static final int side_message=0x7f020029;
-        public static final int side_more=0x7f02002a;
-        public static final int tab_demand=0x7f02002b;
-        public static final int tab_home=0x7f02002c;
-        public static final int tab_internship=0x7f02002d;
-        public static final int tab_recruit=0x7f02002e;
-        public static final int top_liebiao=0x7f02002f;
-        public static final int top_search=0x7f020030;
-        public static final int update=0x7f020031;
+        public static final int can_float=0x7f020011;
+        public static final int collect_empty=0x7f020012;
+        public static final int collect_full=0x7f020013;
+        public static final int feedback=0x7f020014;
+        public static final int first_use=0x7f020015;
+        public static final int guide1=0x7f020016;
+        public static final int guide2=0x7f020017;
+        public static final int guide3=0x7f020018;
+        public static final int guide_point=0x7f020019;
+        public static final int guide_point_light=0x7f02001a;
+        public static final int head=0x7f02001b;
+        public static final int ic_launcher=0x7f02001c;
+        public static final int list_folat=0x7f02001d;
+        public static final int per_edit=0x7f02001e;
+        public static final int qr_code=0x7f02001f;
+        public static final int see=0x7f020020;
+        public static final int select_blue=0x7f020021;
+        public static final int select_deepblue=0x7f020022;
+        public static final int select_gray=0x7f020023;
+        public static final int select_gray_blue=0x7f020024;
+        public static final int select_trans=0x7f020025;
+        public static final int select_white=0x7f020026;
+        public static final int shadow_table=0x7f020027;
+        public static final int share=0x7f020028;
+        public static final int side_collection=0x7f020029;
+        public static final int side_me=0x7f02002a;
+        public static final int side_message=0x7f02002b;
+        public static final int side_more=0x7f02002c;
+        public static final int tab_demand=0x7f02002d;
+        public static final int tab_home=0x7f02002e;
+        public static final int tab_internship=0x7f02002f;
+        public static final int tab_recruit=0x7f020030;
+        public static final int top_liebiao=0x7f020031;
+        public static final int top_search=0x7f020032;
+        public static final int update=0x7f020033;
     }
     public static final class id {
         public static final int about_us_back=0x7f080000;
@@ -145,86 +162,90 @@ containing a value of this type.
         public static final int edit_mail_back=0x7f080037;
         public static final int edit_mail_content=0x7f080039;
         public static final int edit_mail_save=0x7f080038;
+        public static final int fragment_demand_float=0x7f08003c;
         public static final int fragment_demand_listView=0x7f08003b;
         public static final int fragment_demand_refresh=0x7f08003a;
-        public static final int fragment_home_list_demand=0x7f080042;
-        public static final int fragment_home_list_internship=0x7f080045;
-        public static final int fragment_home_list_recruit=0x7f08003f;
-        public static final int fragment_home_ll_demand=0x7f080041;
-        public static final int fragment_home_ll_internship=0x7f080044;
-        public static final int fragment_home_ll_recruit=0x7f08003e;
-        public static final int fragment_home_out_demand=0x7f080040;
-        public static final int fragment_home_out_intrernship=0x7f080043;
-        public static final int fragment_home_out_recruit=0x7f08003d;
-        public static final int fragment_home_refresh=0x7f08003c;
-        public static final int fragment_internship_listView=0x7f080047;
-        public static final int fragment_internship_refresh=0x7f080046;
-        public static final int fragment_recruit_listView=0x7f080049;
-        public static final int fragment_recruit_refresh=0x7f080048;
-        public static final int fragment_recruit_table_01=0x7f08004e;
-        public static final int fragment_recruit_table_201=0x7f08004c;
-        public static final int fragment_recruit_table_209=0x7f08004d;
-        public static final int fragment_recruit_table_d5=0x7f08004f;
-        public static final int fragment_recruit_table_grid=0x7f080053;
-        public static final int fragment_recruit_table_h3=0x7f080050;
-        public static final int fragment_recruit_table_left=0x7f08004b;
-        public static final int fragment_recruit_table_listview=0x7f080055;
-        public static final int fragment_recruit_table_ll=0x7f080054;
-        public static final int fragment_recruit_table_refresh=0x7f08004a;
-        public static final int fragment_recruit_table_w1=0x7f080051;
-        public static final int fragment_recruit_table_w2=0x7f080052;
-        public static final int guide03_enter=0x7f080057;
+        public static final int fragment_home_list_demand=0x7f080043;
+        public static final int fragment_home_list_internship=0x7f080046;
+        public static final int fragment_home_list_recruit=0x7f080040;
+        public static final int fragment_home_ll_demand=0x7f080042;
+        public static final int fragment_home_ll_internship=0x7f080045;
+        public static final int fragment_home_ll_recruit=0x7f08003f;
+        public static final int fragment_home_out_demand=0x7f080041;
+        public static final int fragment_home_out_intrernship=0x7f080044;
+        public static final int fragment_home_out_recruit=0x7f08003e;
+        public static final int fragment_home_refresh=0x7f08003d;
+        public static final int fragment_internship_float=0x7f080049;
+        public static final int fragment_internship_listView=0x7f080048;
+        public static final int fragment_internship_refresh=0x7f080047;
+        public static final int fragment_recruit_float=0x7f080059;
+        public static final int fragment_recruit_float1=0x7f08004c;
+        public static final int fragment_recruit_listView=0x7f08004b;
+        public static final int fragment_recruit_refresh=0x7f08004a;
+        public static final int fragment_recruit_table_01=0x7f080051;
+        public static final int fragment_recruit_table_201=0x7f08004f;
+        public static final int fragment_recruit_table_209=0x7f080050;
+        public static final int fragment_recruit_table_d5=0x7f080052;
+        public static final int fragment_recruit_table_grid=0x7f080056;
+        public static final int fragment_recruit_table_h3=0x7f080053;
+        public static final int fragment_recruit_table_left=0x7f08004e;
+        public static final int fragment_recruit_table_listview=0x7f080058;
+        public static final int fragment_recruit_table_ll=0x7f080057;
+        public static final int fragment_recruit_table_refresh=0x7f08004d;
+        public static final int fragment_recruit_table_w1=0x7f080054;
+        public static final int fragment_recruit_table_w2=0x7f080055;
+        public static final int guide03_enter=0x7f08005b;
         public static final int id_content=0x7f080007;
         public static final int id_content_2=0x7f080006;
-        public static final int id_guide=0x7f080056;
-        public static final int id_list_table=0x7f080061;
-        public static final int id_top_calendar=0x7f08007c;
+        public static final int id_guide=0x7f08005a;
+        public static final int id_list_table=0x7f080065;
+        public static final int id_top_calendar=0x7f080080;
         public static final int imageView1=0x7f080002;
-        public static final int list_demand_name=0x7f080058;
-        public static final int list_demand_position=0x7f080059;
-        public static final int list_demand_publishTime=0x7f08005a;
-        public static final int list_internship_name=0x7f08005b;
-        public static final int list_internship_position=0x7f08005c;
-        public static final int list_internship_publishTime=0x7f08005d;
-        public static final int list_recruit_name=0x7f08005e;
-        public static final int list_recruit_place=0x7f08005f;
-        public static final int list_recruit_time=0x7f080060;
-        public static final int login_id=0x7f080064;
-        public static final int login_username=0x7f080062;
-        public static final int login_userpass=0x7f080063;
-        public static final int login_visitor=0x7f080065;
+        public static final int list_demand_name=0x7f08005c;
+        public static final int list_demand_position=0x7f08005d;
+        public static final int list_demand_publishTime=0x7f08005e;
+        public static final int list_internship_name=0x7f08005f;
+        public static final int list_internship_position=0x7f080060;
+        public static final int list_internship_publishTime=0x7f080061;
+        public static final int list_recruit_name=0x7f080062;
+        public static final int list_recruit_place=0x7f080063;
+        public static final int list_recruit_time=0x7f080064;
+        public static final int login_id=0x7f080068;
+        public static final int login_username=0x7f080066;
+        public static final int login_userpass=0x7f080067;
+        public static final int login_visitor=0x7f080069;
         public static final int main_drawer=0x7f080005;
         public static final int main_left=0x7f080008;
-        public static final int more_about_us=0x7f080068;
-        public static final int more_back=0x7f080067;
-        public static final int more_edit=0x7f08006c;
-        public static final int more_firstuse=0x7f08006b;
-        public static final int more_layout=0x7f080066;
-        public static final int more_option_back=0x7f080069;
-        public static final int more_update=0x7f08006a;
-        public static final int personal_message_back=0x7f08006d;
-        public static final int personal_message_college=0x7f080070;
-        public static final int personal_message_eidt_intro=0x7f080075;
-        public static final int personal_message_eidt_mail=0x7f080073;
-        public static final int personal_message_head=0x7f08006e;
-        public static final int personal_message_intro=0x7f080074;
-        public static final int personal_message_mail=0x7f080072;
-        public static final int personal_message_major=0x7f080071;
-        public static final int personal_message_name=0x7f08006f;
+        public static final int more_about_us=0x7f08006c;
+        public static final int more_back=0x7f08006b;
+        public static final int more_edit=0x7f080070;
+        public static final int more_firstuse=0x7f08006f;
+        public static final int more_layout=0x7f08006a;
+        public static final int more_option_back=0x7f08006d;
+        public static final int more_update=0x7f08006e;
+        public static final int personal_message_back=0x7f080071;
+        public static final int personal_message_college=0x7f080074;
+        public static final int personal_message_eidt_intro=0x7f080079;
+        public static final int personal_message_eidt_mail=0x7f080077;
+        public static final int personal_message_head=0x7f080072;
+        public static final int personal_message_intro=0x7f080078;
+        public static final int personal_message_mail=0x7f080076;
+        public static final int personal_message_major=0x7f080075;
+        public static final int personal_message_name=0x7f080073;
         public static final int scrollView1=0x7f080015;
-        public static final int search_back=0x7f080076;
-        public static final int search_content_str=0x7f080078;
-        public static final int search_id=0x7f080077;
+        public static final int search_back=0x7f08007a;
+        public static final int search_content_str=0x7f08007c;
+        public static final int search_id=0x7f08007b;
         public static final int textView1=0x7f080001;
         public static final int textView2=0x7f080003;
         public static final int textView3=0x7f080004;
-        public static final int top_calendar_after=0x7f080080;
-        public static final int top_calendar_before=0x7f08007d;
-        public static final int top_calendar_calendar=0x7f08007e;
-        public static final int top_calendar_date=0x7f08007f;
-        public static final int top_drawer=0x7f080079;
-        public static final int top_search=0x7f08007b;
-        public static final int top_title=0x7f08007a;
+        public static final int top_calendar_after=0x7f080084;
+        public static final int top_calendar_before=0x7f080081;
+        public static final int top_calendar_calendar=0x7f080082;
+        public static final int top_calendar_date=0x7f080083;
+        public static final int top_drawer=0x7f08007d;
+        public static final int top_search=0x7f08007f;
+        public static final int top_title=0x7f08007e;
     }
     public static final class layout {
         public static final int about_us=0x7f030000;
@@ -339,5 +360,46 @@ containing a value of this type.
           @attr name com.example.scujoo:border_width
         */
         public static final int CircleImageView_border_width = 0;
+        /** Attributes that can be used with a FAB.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #FAB_bg_color com.example.scujoo:bg_color}</code></td><td> Background color </td></tr>
+           <tr><td><code>{@link #FAB_bg_color_pressed com.example.scujoo:bg_color_pressed}</code></td><td></td></tr>
+           </table>
+           @see #FAB_bg_color
+           @see #FAB_bg_color_pressed
+         */
+        public static final int[] FAB = {
+            0x7f010002, 0x7f010003
+        };
+        /**
+          <p>
+          @attr description
+           Background color 
+
+
+          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+          <p>This is a private symbol.
+          @attr name com.example.scujoo:bg_color
+        */
+        public static final int FAB_bg_color = 0;
+        /**
+          <p>This symbol is the offset where the {@link com.example.scujoo.R.attr#bg_color_pressed}
+          attribute's value can be found in the {@link #FAB} array.
+
+
+          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+          @attr name com.example.scujoo:bg_color_pressed
+        */
+        public static final int FAB_bg_color_pressed = 1;
     };
 }

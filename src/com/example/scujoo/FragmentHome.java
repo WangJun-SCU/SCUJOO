@@ -21,8 +21,11 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,6 +41,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.scujoo.adapter.AdapterDemand;
 import com.scujoo.adapter.AdapterInternship;
@@ -46,6 +50,7 @@ import com.scujoo.datas.DatasDemand;
 import com.scujoo.datas.DatasInternship;
 import com.scujoo.datas.DatasRecruit;
 import com.scujoo.datas.StaticDatas;
+import com.scujoo.utils.HttpUtils;
 import com.scujoo.utils.Md5;
 
 public class FragmentHome extends Fragment implements
@@ -114,9 +119,19 @@ public class FragmentHome extends Fragment implements
 			dialog.setCancelable(true);
 			dialog.show();
 		}
+		Context context = getActivity().getApplicationContext();
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		if (mNetworkInfo != null) {
+			// 如果有网络连接，执行异步传输
+			Yibu yibu = new Yibu();
+			yibu.execute();
+		} else {
+			Toast.makeText(getActivity(), "无网络连接", 1).show();
+			getActivity().finish();
+		}
 
-		Yibu yibu = new Yibu();
-		yibu.execute();
 
 		// 设置listView监听事件
 		recruit.setOnItemClickListener(new OnItemClickListener() {
@@ -192,6 +207,7 @@ public class FragmentHome extends Fragment implements
 
 		@Override
 		protected String doInBackground(String... params) {
+			
 			HttpPost httpPost = new HttpPost(URL);
 			HttpResponse httpResponse = null;
 			List<NameValuePair> param = new ArrayList<NameValuePair>();

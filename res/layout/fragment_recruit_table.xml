@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.example.scujoo"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/fragment_recruit_table_refresh"
@@ -44,7 +44,7 @@
                         android:gravity="center"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
-                        android:text="9:30" />
+                        android:text="上午场" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -54,7 +54,7 @@
                         android:gravity="center"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
-                        android:text="12:30" />
+                        android:text="中午场" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -64,7 +64,7 @@
                         android:gravity="center"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
-                        android:text="15:00" />
+                        android:text="下午场" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -74,7 +74,7 @@
                         android:gravity="center"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
-                        android:text="18:30" />
+                        android:text="晚场" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -115,7 +115,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:background="@drawable/bg_table"
-                            android:text="副楼01" />
+                            android:text="附楼01" />
 
                         <TextView
                             android:id="@+id/fragment_recruit_table_d5"
@@ -124,7 +124,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:background="@drawable/bg_table"
-                            android:text="东五教演播厅" />
+                            android:text="西五教演播厅" />
 
                         <TextView
                             android:id="@+id/fragment_recruit_table_h3"
@@ -191,8 +191,35 @@
                         android:layout_height="wrap_content" >
                     </ListView>
                 </LinearLayout>
+                
+                <View android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+        				android:layout_marginRight="10dp"
+                        android:background="@color/lightgray"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:text="*祝早日找到满意工作，脱离苦海~~"
+                        android:textColor="@color/lightgray"
+                    	android:textSize="12sp"/>
             </LinearLayout>
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
+    <com.example.scujoo.CustomFAB
+        android:id="@+id/fragment_recruit_float"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/list_folat"
+        android:tint="@android:color/white"
+        custom:bg_color="@color/blue" />
 
-</LinearLayout>
+</RelativeLayout>

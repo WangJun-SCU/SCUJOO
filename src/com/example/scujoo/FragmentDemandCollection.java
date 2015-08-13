@@ -42,6 +42,7 @@ public class FragmentDemandCollection extends Fragment implements
 	private List<DatasDemand> listDemand;
 	private AdapterDemand adapterDemand;
 	private ProgressDialog dialog;
+	private com.example.scujoo.CustomFAB floatButton;
 
 	private TextView topTitle;
 
@@ -92,6 +93,9 @@ public class FragmentDemandCollection extends Fragment implements
 		dialog.setIndeterminate(false);
 		dialog.setCancelable(true);
 		dialog.show();
+		
+		floatButton = (CustomFAB) rootView.findViewById(R.id.fragment_demand_float);
+		floatButton.setVisibility(View.INVISIBLE);
 
 		// 刷新空间的声明
 		swipeRefreshLayout = (SwipeRefreshLayout) rootView

@@ -64,18 +64,25 @@ public class FragmentDemand extends Fragment implements
 	private String sDate;
 	private String sWeek;
 	private SharedPreferences sp;
+	private SharedPreferences.Editor editor;
 	private String userName;
 	private String userPass;
 	private String token;
 	private String md5;
 	private LinearLayout datePicker;
+	private com.example.scujoo.CustomFAB floatButton;
+	private String url = "";
 
 	private Handler handlerDemand = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			String jsonData = (String) msg.obj;
 			dialog.dismiss();
 			swipeRefreshLayout.setRefreshing(false);
-			topCalendar.setVisibility(View.VISIBLE);
+			if (url.equals("")) {
+				topCalendar.setVisibility(View.VISIBLE);
+			} else {
+				topCalendar.setVisibility(View.GONE);
+			}
 			try {
 				JSONObject jsonObject = new JSONObject(jsonData);
 				String object = jsonObject.getString("result");
@@ -101,9 +108,9 @@ public class FragmentDemand extends Fragment implements
 			Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_demand, container, false);
 		init();
-		currentDate.setText(sDate+"   "+sWeek);//设置当前日期
-		
-		//判断是否是刷新回调---------------------------------------------------------
+		currentDate.setText(sDate + "   " + sWeek);// 设置当前日期
+
+		// 判断是否是刷新回调---------------------------------------------------------
 		String callBack = "";
 		try {
 			callBack = getArguments().getString("callBack", "");
@@ -125,13 +132,13 @@ public class FragmentDemand extends Fragment implements
 		} else {
 			// 显示正在加载
 			dialog = new ProgressDialog(getActivity());
-			dialog.setMessage("正在加载...");
+	 		dialog.setMessage("正在加载...");
 			dialog.setIndeterminate(false);
 			dialog.setCancelable(true);
 			dialog.show();
-		}
-		
-		String url = "default";//是否是搜索回调
+		} 
+
+		// 是否是搜索回调
 		String content = "default";
 		String select = "default";
 		try {
@@ -140,9 +147,21 @@ public class FragmentDemand extends Fragment implements
 			select = getArguments().getString("select", "");
 			if (url != "") {
 				URL = url;
+				System.out.println("111");
+			}else{
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			editor.remove("floatTag");
+			editor.commit();
+		}
+		//设置悬浮按钮
+		String tag = sp.getString("floatTag", "");
+		if(tag.equals(""))
+		{
+			floatButton.setImageResource(R.drawable.list_folat);
+		}else{
+			floatButton.setImageResource(R.drawable.can_float);
 		}
 
 		listViewDemand.setAdapter(adapterDemand);
@@ -153,21 +172,20 @@ public class FragmentDemand extends Fragment implements
 		params.add(new BasicNameValuePair("userPass", userPass));
 		params.add(new BasicNameValuePair("md5", md5));
 		String cDate = "";
-		//判断是否点击了前一天后者后一天回调
+		// 判断是否点击了前一天后者后一天回调
 		try {
 			cDate = getArguments().getString("cDate", "");
 			SimpleDateFormat s1 = new SimpleDateFormat("EEEE");
 			SimpleDateFormat s2 = new SimpleDateFormat("yyyy-MM-dd");
 			Date d = s2.parse(cDate);
 			String ss = s1.format(d);
-			currentDate.setText(cDate+"  "+ss);
+			currentDate.setText(cDate + "  " + ss);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		if(cDate!="")
-		{
+		if (cDate != "") {
 			params.add(new BasicNameValuePair("date", cDate));
-		}else{
+		} else {
 			params.add(new BasicNameValuePair("date", sDate));
 		}
 
@@ -187,7 +205,7 @@ public class FragmentDemand extends Fragment implements
 		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 		if (mNetworkInfo != null) {
 			// 如果有网络连接，执行异步传输
-			System.out.println("params:"+params);
+			System.out.println("params:" + params);
 			HttpUtils.getJson(URL, handlerDemand, params);
 		} else {
 			Toast.makeText(getActivity(), "无网络连接", 1).show();
@@ -220,15 +238,16 @@ public class FragmentDemand extends Fragment implements
 				new DatePickerDialog(getActivity(),
 						new DatePickerDialog.OnDateSetListener() {
 							boolean mFired = false;
+
 							public void onDateSet(DatePicker view, int year,
 									int monthOfYear, int dayOfMonth) {
 								if (mFired == true) {
-						            return;
-						        } else {
-						            //first time mFired
-						            mFired = true;
-						        }
-								
+									return;
+								} else {
+									// first time mFired
+									mFired = true;
+								}
+
 								String tDate = "" + year + "-"
 										+ (monthOfYear + 1) + "-" + dayOfMonth;// 获取选择的日期
 								fragmentDemand = new FragmentDemand();
@@ -247,19 +266,19 @@ public class FragmentDemand extends Fragment implements
 
 			public void onClick(View v) {
 				String[] ss = currentDate.getText().toString().split("  ");
-				String tDate = ss[0];//获取标题栏上的日期
-				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		        Date dt=new Date();
+				String tDate = ss[0];// 获取标题栏上的日期
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date dt = new Date();
 				try {
 					dt = sdf.parse(tDate);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-		        Calendar rightNow = Calendar.getInstance();
-		        rightNow.setTime(dt);
-		        rightNow.add(Calendar.DAY_OF_YEAR,-1);//日期加10天
-		        Date dt1=rightNow.getTime();
-		        String reStr = sdf.format(dt1);//标题栏其日期减一天
+				Calendar rightNow = Calendar.getInstance();
+				rightNow.setTime(dt);
+				rightNow.add(Calendar.DAY_OF_YEAR, -1);// 日期加10天
+				Date dt1 = rightNow.getTime();
+				String reStr = sdf.format(dt1);// 标题栏其日期减一天
 				fragmentDemand = new FragmentDemand();
 				Bundle bundle = new Bundle();
 				bundle.putString("cDate", reStr);
@@ -273,19 +292,19 @@ public class FragmentDemand extends Fragment implements
 
 			public void onClick(View v) {
 				String[] ss = currentDate.getText().toString().split("  ");
-				String tDate = ss[0];//获取标题栏上的日期
-				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		        Date dt=new Date();
+				String tDate = ss[0];// 获取标题栏上的日期
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date dt = new Date();
 				try {
 					dt = sdf.parse(tDate);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-		        Calendar rightNow = Calendar.getInstance();
-		        rightNow.setTime(dt);
-		        rightNow.add(Calendar.DAY_OF_YEAR,+1);//日期加10天
-		        Date dt1=rightNow.getTime();
-		        String reStr = sdf.format(dt1);//标题栏其日加一天
+				Calendar rightNow = Calendar.getInstance();
+				rightNow.setTime(dt);
+				rightNow.add(Calendar.DAY_OF_YEAR, +1);// 日期加10天
+				Date dt1 = rightNow.getTime();
+				String reStr = sdf.format(dt1);// 标题栏其日加一天
 				fragmentDemand = new FragmentDemand();
 				Bundle bundle = new Bundle();
 				bundle.putString("cDate", reStr);
@@ -294,10 +313,39 @@ public class FragmentDemand extends Fragment implements
 				ft.commit();
 			}
 		});
+		// 悬浮按钮点击事件
+		floatButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				 String tag = sp.getString("floatTag", "");
+				if (tag.equals("")) {
+					editor.putString("floatTag", "tag");
+					editor.commit();
+					fragmentDemand = new FragmentDemand();
+					Bundle bundle = new Bundle();
+					String url = StaticDatas.URL + "scujoo/demand.php";
+					bundle.putString("url12", url);
+					fragmentDemand.setArguments(bundle);
+					ft.replace(R.id.id_content, fragmentDemand);
+					ft.commit();
+					floatButton.setImageResource(R.drawable.can_float);
+					Toast.makeText(getActivity(), "全部需求信息", Toast.LENGTH_SHORT).show();
+				} else if(tag.equals("tag")){
+					editor.remove("floatTag");
+					editor.commit();
+					floatButton.setTag("date");
+					fragmentDemand = new FragmentDemand();
+					ft.replace(R.id.id_content, fragmentDemand);
+					floatButton.setImageResource(R.drawable.list_folat);
+					ft.commit();
+					Toast.makeText(getActivity(), "日期视图", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 		return rootView;
 	}
 
-	//初始化
+	// 初始化
 	private void init() {
 		fm = getActivity().getSupportFragmentManager();
 		ft = fm.beginTransaction();
@@ -312,28 +360,46 @@ public class FragmentDemand extends Fragment implements
 				R.id.top_calendar_after);
 		datePicker = (LinearLayout) getActivity().findViewById(
 				R.id.top_calendar_calendar);
-		currentDate = (TextView) getActivity().findViewById(R.id.top_calendar_date);
+		currentDate = (TextView) getActivity().findViewById(
+				R.id.top_calendar_date);
 		Date d = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE");
 		sDate = sdf.format(d);
 		sWeek = sdf2.format(d);
-		sp = getActivity().getSharedPreferences("datas",Activity.MODE_PRIVATE);
+		sp = getActivity().getSharedPreferences("datas", Activity.MODE_PRIVATE);
+		editor = sp.edit();
 		userName = sp.getString("userName", "");
 		userPass = sp.getString("userPass", "");
 		token = "userName=" + userName + "&userPass=" + userPass + "token";
 		md5 = Md5.Md5Str(token);
-		listViewDemand = (ListView) rootView.findViewById(R.id.fragment_demand_listView);
+		listViewDemand = (ListView) rootView
+				.findViewById(R.id.fragment_demand_listView);
 		listDemand = new ArrayList<DatasDemand>();
 		adapterDemand = new AdapterDemand(rootView.getContext(), listDemand);
+		floatButton = (CustomFAB) rootView
+				.findViewById(R.id.fragment_demand_float);
 	}
 
 	public void onRefresh() {
-		fragmentDemand = new FragmentDemand();
-		Bundle bundle = new Bundle();
-		bundle.putString("callBack", "callBack");
-		fragmentDemand.setArguments(bundle);
-		ft.replace(R.id.id_content, fragmentDemand);
-		ft.commit();
+		String tag = sp.getString("floatTag", "");
+		if(tag.equals("tag"))
+		{
+			fragmentDemand = new FragmentDemand();
+			Bundle bundle = new Bundle();
+			String url = StaticDatas.URL + "scujoo/demand.php";
+			bundle.putString("callBack", "callBack");
+			bundle.putString("url12", url);
+			fragmentDemand.setArguments(bundle);
+			ft.replace(R.id.id_content, fragmentDemand);
+			ft.commit();
+		}else{
+			fragmentDemand = new FragmentDemand();
+			Bundle bundle = new Bundle();
+			bundle.putString("callBack", "callBack");
+			fragmentDemand.setArguments(bundle);
+			ft.replace(R.id.id_content, fragmentDemand);
+			ft.commit();
+		}
 	}
 }

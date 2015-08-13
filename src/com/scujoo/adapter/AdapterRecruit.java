@@ -48,9 +48,9 @@ public class AdapterRecruit extends BaseAdapter {
 
 		datasRecruit = listRecruit.get(position);
 		
-		name.setText(datasRecruit.getName());
-		recruitPlace.setText(datasRecruit.getRecruitPlace());
-		recruitTime.setText(datasRecruit.getRecruitTime());
+		name.setText(datasRecruit.getName().trim());
+		recruitPlace.setText(datasRecruit.getRecruitPlace().trim());
+		recruitTime.setText(datasRecruit.getRecruitTime().trim());
 		
 		return convertView;
 	}

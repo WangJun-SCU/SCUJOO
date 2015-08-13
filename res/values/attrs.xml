@@ -4,4 +4,10 @@
         <attr name="border_width" format="dimension" />
         <attr name="border_color" format="color" />
     </declare-styleable>
+    
+    <declare-styleable name="FAB">
+        <!-- Background color -->
+        <attr name="bg_color" format="color|reference"/>
+        <attr name="bg_color_pressed" format="color|reference"/>
+    </declare-styleable>
 </resources>
