@@ -26,6 +26,7 @@ public class Collection extends FragmentActivity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.collection);
 		init();
 		initEvent();

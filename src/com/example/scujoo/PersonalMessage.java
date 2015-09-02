@@ -1,9 +1,12 @@
 package com.example.scujoo;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import org.apache.http.Header;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +26,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.Base64;
+import com.loopj.android.http.RequestParams;
+import com.scujoo.datas.StaticDatas;
 import com.scujoo.utils.CircleImageView;
 
 public class PersonalMessage extends Activity {
@@ -37,7 +45,9 @@ public class PersonalMessage extends Activity {
 	private TextView intro;
 	private CircleImageView head;
 	private Bitmap headBitmap;
+	String userName;
 	private static String path = "/sdcard/myHead/";// 本地储存头像路径
+	private final String sendImageUrl = StaticDatas.URL + "scujoo/acceptImage.php";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +133,7 @@ public class PersonalMessage extends Activity {
 		});
 
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -145,7 +155,10 @@ public class PersonalMessage extends Activity {
 		editMail = (ImageButton) findViewById(R.id.personal_message_eidt_mail);
 		editIntro = (ImageButton) findViewById(R.id.personal_message_eidt_intro);
 
-		Bitmap bt = BitmapFactory.decodeFile(path + "head.jpg");// 从Sd中找头像，转换成Bitmap
+		SharedPreferences sp1 = getSharedPreferences("datas", MODE_PRIVATE);
+		final String name = sp1.getString("userName", "");
+		userName = name;
+		Bitmap bt = BitmapFactory.decodeFile(path + name+".jpg");// 从Sd中找头像，转换成Bitmap
 		if (bt != null) {
 			@SuppressWarnings("deprecation")
 			Drawable drawable = new BitmapDrawable(bt);// 转换成drawable
@@ -194,6 +207,7 @@ public class PersonalMessage extends Activity {
 					/**
 					 * 上传服务器代码
 					 */
+					sendImage(headBitmap);
 					setPicToView(headBitmap);// 保存在SD卡中
 					head.setImageBitmap(headBitmap);// 用ImageView显示出来
 				}
@@ -201,7 +215,6 @@ public class PersonalMessage extends Activity {
 			break;
 		default:
 			break;
-
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	};
@@ -233,7 +246,7 @@ public class PersonalMessage extends Activity {
 		FileOutputStream b = null;
 		File file = new File(path);
 		file.mkdirs();// 创建文件夹
-		String fileName = path + "head.jpg";// 图片名字
+		String fileName = path + userName+".jpg";// 图片名字
 		try {
 			b = new FileOutputStream(fileName);
 			mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
@@ -251,5 +264,49 @@ public class PersonalMessage extends Activity {
 
 		}
 	}
-
+	/**
+	 * 将图片上传到服务器
+	 * @param bt
+	 * 将拿到的bitmap进行base64编码
+	 * 利用AsyncHttpClient框架将编码后的字符传递上去
+	 * 在服务器php中接收，并保存在服务器中
+	 */
+	private void sendImage(Bitmap bt)
+	{
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		/**
+		 * 压缩图片
+		 * 第一个参数指定bitmap格式
+		 * 第二个参数压缩的比例
+		 * 第三个参数是输出流
+		 */
+		bt.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+		byte[] bytes = stream.toByteArray();
+		//将bitmap进行Base64编码
+		String img = new String(Base64.encode(bytes, Base64.DEFAULT));
+		
+		AsyncHttpClient cilent = new AsyncHttpClient();
+		RequestParams params = new RequestParams();
+		params.add("img", img);
+		params.add("userName", userName);
+		System.out.println("params"+params.toString());
+		cilent.post(sendImageUrl, params, new AsyncHttpResponseHandler() {
+			/**
+			 * 上传成功调用函数
+			 */
+			@Override
+			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+				// TODO Auto-generated method stub
+				Toast.makeText(PersonalMessage.this, "上传成功", 1).show();
+			}
+			/**
+			 * 上传失败调用函数
+			 */
+			@Override
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2, Throwable arg3) {
+				// TODO Auto-generated method stub
+				Toast.makeText(PersonalMessage.this, "上传失败", 1).show();
+			}
+		});
+	}	
 }

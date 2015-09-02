@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp" >
+
+    <ViewFlipper
+        android:id="@+id/home_flipper_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/home_flipper_content1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/about"/>
+        
+        <ImageView
+            android:id="@+id/home_flipper_content2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" 
+            android:scaleType="fitXY"/>
+        
+        <ImageView
+            android:id="@+id/home_flipper_content3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+        
+        <ImageView
+            android:id="@+id/home_flipper_content4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+    </ViewFlipper>
+
+    <ImageView
+        android:id="@+id/home_flipper_iv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/home_flipper_iv2"
+        android:src="@drawable/point_green" />
+
+    <ImageView
+        android:id="@+id/home_flipper_iv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/home_flipper_iv3"
+        android:src="@drawable/point_gray" />
+
+    <ImageView
+        android:id="@+id/home_flipper_iv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/home_flipper_iv4"
+        android:src="@drawable/point_gray" />
+
+    <ImageView
+        android:id="@+id/home_flipper_iv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/point_gray" />
+
+</RelativeLayout>

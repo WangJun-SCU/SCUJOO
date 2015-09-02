@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.scujoo"
-    android:versionCode="111"
-    android:versionName="1.11" >
+    android:versionCode="121"
+    android:versionName="1.21" >
 
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -20,25 +24,37 @@
             android:name="com.example.scujoo.MainActivity"
             android:label="@string/app_name" >
         </activity>
-        
-        <activity android:name="com.example.scujoo.Guide">
+        <activity android:name="com.example.scujoo.Guide" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.scujoo.PersonalMessage"></activity>
-        <activity android:name="More"></activity>
-        <activity android:name="Login"></activity>
-        <activity android:name="Collection"></activity>
-        <activity android:name="ContentRecruit"></activity>
-        <activity android:name="ContentDemand"></activity>
-        <activity android:name="ContentInternship"></activity>
-        <activity android:name="Search"></activity>
-        <activity android:name="com.joo.others.AboutUs"></activity>
-        <activity android:name="EditMail"></activity>
-        <activity android:name="EditIntro"></activity>
+        <activity android:name="com.example.scujoo.PersonalMessage" >
+        </activity>
+        <activity android:name="More" >
+        </activity>
+        <activity android:name="Login" >
+        </activity>
+        <activity android:name="Collection" >
+        </activity>
+        <activity android:name="ContentRecruit" >
+        </activity>
+        <activity android:name="ContentDemand" >
+        </activity>
+        <activity android:name="ContentInternship" >
+        </activity>
+        <activity android:name="Search" >
+        </activity>
+        <activity android:name="com.joo.others.AboutUs" >
+        </activity>
+        <activity android:name="EditMail" >
+        </activity>
+        <activity android:name="EditIntro" >
+        </activity>
+        <receiver android:name="MainActivity$MyReceiver">
+        </receiver>
     </application>
 
 </manifest>

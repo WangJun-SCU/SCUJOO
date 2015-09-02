@@ -19,11 +19,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -31,18 +33,23 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
+import com.example.scujoo.MainActivity.MyTouchListener;
 import com.scujoo.adapter.AdapterDemand;
 import com.scujoo.adapter.AdapterInternship;
 import com.scujoo.adapter.AdapterRecruit;
@@ -50,16 +57,21 @@ import com.scujoo.datas.DatasDemand;
 import com.scujoo.datas.DatasInternship;
 import com.scujoo.datas.DatasRecruit;
 import com.scujoo.datas.StaticDatas;
-import com.scujoo.utils.HttpUtils;
 import com.scujoo.utils.Md5;
+import com.squareup.picasso.Picasso;
 
-public class FragmentHome extends Fragment implements
-		SwipeRefreshLayout.OnRefreshListener {
+public class FragmentHome extends Fragment {
 
+	private float startX;
 	private ListView recruit;
 	private ListView demand;
 	private ListView internship;
-	View rootView;
+	private ImageView content1;
+	private ImageView content2;
+	private ImageView content3;
+	private ImageView content4;
+	private ViewFlipper flipper;
+	private View rootView;
 	private List<DatasRecruit> listDatasRecruit;
 	private List<DatasDemand> listDatasDemand;
 	private List<DatasInternship> listDatasInternship;
@@ -74,11 +86,9 @@ public class FragmentHome extends Fragment implements
 	private LinearLayout llOutDemand;
 	private LinearLayout llOutInternship;
 	private LinearLayout topCalendar;
-	private SwipeRefreshLayout swipeRefreshLayout;
-	private FragmentHome fragmentHome;
-	FragmentManager fm;
-	FragmentTransaction ft;
-
+	private FragmentManager fm;
+	private FragmentTransaction ft;
+	private int index = 1;
 	private String URL = StaticDatas.URL + "scujoo/hot_home.php";
 
 	@Override
@@ -86,10 +96,19 @@ public class FragmentHome extends Fragment implements
 			Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_home, container, false);
 		init();// 初始化组件
+		final ImageView iv1 = (ImageView) rootView
+				.findViewById(R.id.home_flipper_iv1);
+		final ImageView iv2 = (ImageView) rootView
+				.findViewById(R.id.home_flipper_iv2);
+		final ImageView iv3 = (ImageView) rootView
+				.findViewById(R.id.home_flipper_iv3);
+		final ImageView iv4 = (ImageView) rootView
+				.findViewById(R.id.home_flipper_iv4);
+		final ImageView[] arr = { iv1, iv2, iv3, iv4 };
 		llRecruit.setVisibility(View.INVISIBLE);
 		llDemand.setVisibility(View.INVISIBLE);
 		llIntrenship.setVisibility(View.INVISIBLE);
-		
+
 		String callBack = "";
 		try {
 			callBack = getArguments().getString("callBack", "");
@@ -99,26 +118,13 @@ public class FragmentHome extends Fragment implements
 			e1.printStackTrace();
 		}
 
-		// 刷新监听器
-		swipeRefreshLayout.setOnRefreshListener(this);
-		// 设置刷新效果的颜色
-		swipeRefreshLayout
-				.setColorScheme(android.R.color.holo_blue_dark,
-						android.R.color.holo_green_dark,
-						android.R.color.holo_orange_dark,
-						android.R.color.holo_red_dark);
+		// 显示正在加载
+		dialog = new ProgressDialog(getActivity());
+		dialog.setMessage("正在加载...");
+		dialog.setIndeterminate(false);
+		dialog.setCancelable(true);
+		dialog.show();
 
-		if (callBack.equals("callBack")) {
-			dialog = new ProgressDialog(getActivity());
-			swipeRefreshLayout.setRefreshing(true);
-		} else {
-			// 显示正在加载
-			dialog = new ProgressDialog(getActivity());
-			dialog.setMessage("正在加载...");
-			dialog.setIndeterminate(false);
-			dialog.setCancelable(true);
-			dialog.show();
-		}
 		Context context = getActivity().getApplicationContext();
 		ConnectivityManager mConnectivityManager = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -131,7 +137,6 @@ public class FragmentHome extends Fragment implements
 			Toast.makeText(getActivity(), "无网络连接", 1).show();
 			getActivity().finish();
 		}
-
 
 		// 设置listView监听事件
 		recruit.setOnItemClickListener(new OnItemClickListener() {
@@ -170,10 +175,88 @@ public class FragmentHome extends Fragment implements
 			}
 		});
 
+		/**
+		 * Fragment中，注册 接收MainActivity的Touch回调的对象
+		 * 重写其中的onTouchEvent函数，并进行该Fragment的逻辑处理
+		 */
+		MainActivity.MyTouchListener mTouchListener = new MyTouchListener() {
+			@Override
+			public void onTouchEvent(MotionEvent event) {
+				// TODO Auto-generated method stub
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN: {
+					startX = event.getX();
+					break;
+				}
+
+				case MotionEvent.ACTION_UP: {
+					// 向右滑动
+					if (event.getX() - startX > 50) {
+						flipper.setInAnimation(getActivity(), R.anim.left_in);
+						flipper.setOutAnimation(getActivity(), R.anim.left_out);
+						flipper.showPrevious();
+						flipper.setInAnimation(getActivity(), R.anim.right_in);
+						flipper.setOutAnimation(getActivity(), R.anim.right_out);
+
+					}
+					// 向左滑动
+					if (startX - event.getX() > 50) {
+						flipper.setInAnimation(getActivity(), R.anim.right_in);
+						flipper.setOutAnimation(getActivity(), R.anim.right_out);
+						flipper.showNext();
+						flipper.setInAnimation(getActivity(), R.anim.right_in);
+						flipper.setOutAnimation(getActivity(), R.anim.right_out);
+					}
+					break;
+				}
+				}
+			}
+		};
+		// 在该Fragment的构造函数中注册mTouchListener的回调
+
+		/*
+		 * ((MainActivity) this.getActivity())
+		 * .registerMyTouchListener(mTouchListener);
+		 */
+
+		// 监听动画完成事件，改变指示器显示
+		flipper.getInAnimation().setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				iv1.setImageResource(R.drawable.point_gray);
+				iv2.setImageResource(R.drawable.point_gray);
+				iv3.setImageResource(R.drawable.point_gray);
+				iv4.setImageResource(R.drawable.point_gray);
+				arr[index].setImageResource(R.drawable.point_green);
+				index = (index + 1) % 4;
+			}
+		});
 		return rootView;
 	}
 
 	private void init() {
+		content1 = (ImageView) rootView
+				.findViewById(R.id.home_flipper_content1);
+		content2 = (ImageView) rootView
+				.findViewById(R.id.home_flipper_content2);
+		content3 = (ImageView) rootView
+				.findViewById(R.id.home_flipper_content3);
+		content4 = (ImageView) rootView
+				.findViewById(R.id.home_flipper_content4);
 		recruit = (ListView) rootView
 				.findViewById(R.id.fragment_home_list_recruit);
 		demand = (ListView) rootView
@@ -197,17 +280,41 @@ public class FragmentHome extends Fragment implements
 				.findViewById(R.id.fragment_home_out_intrernship);
 		topCalendar = (LinearLayout) getActivity().findViewById(
 				R.id.id_top_calendar);
-		swipeRefreshLayout = (SwipeRefreshLayout) rootView
-				.findViewById(R.id.fragment_home_refresh);
 		fm = getActivity().getSupportFragmentManager();
 		ft = fm.beginTransaction();
+		flipper = (ViewFlipper) rootView.findViewById(R.id.home_flipper_image);
+
+		Picasso.with(getActivity())
+				.load("http://120.25.245.241/scujoo/otherImages/home1.jpg")
+				.into(content1);
+		Picasso.with(getActivity())
+				.load("http://120.25.245.241/scujoo/otherImages/home2.jpg")
+				.into(content2);
+		Picasso.with(getActivity())
+				.load("http://120.25.245.241/scujoo/otherImages/home3.jpg")
+				.into(content3);
+		Picasso.with(getActivity())
+				.load("http://120.25.245.241/scujoo/otherImages/home4.jpg")
+				.into(content4);
+
+		/*
+		 * flipper.addView(getImageView(R.drawable.home1));
+		 * flipper.addView(getImageView(R.drawable.home2));
+		 * flipper.addView(getImageView(R.drawable.home3));
+		 * flipper.addView(getImageView(R.drawable.home4));
+		 */
+		flipper.setBackgroundColor(Color.BLACK);
+		flipper.setFlipInterval(3000);
+		flipper.setInAnimation(getActivity(), R.anim.right_in);
+		flipper.setOutAnimation(getActivity(), R.anim.right_out);
+		flipper.startFlipping();
 	}
 
 	class Yibu extends AsyncTask<String, String, String> {
 
 		@Override
 		protected String doInBackground(String... params) {
-			
+
 			HttpPost httpPost = new HttpPost(URL);
 			HttpResponse httpResponse = null;
 			List<NameValuePair> param = new ArrayList<NameValuePair>();
@@ -250,7 +357,6 @@ public class FragmentHome extends Fragment implements
 		@Override
 		protected void onPostExecute(String result) {
 			dialog.dismiss();
-			swipeRefreshLayout.setRefreshing(false);
 			topCalendar.setVisibility(View.GONE);
 			llRecruit.setVisibility(View.VISIBLE);
 			llDemand.setVisibility(View.VISIBLE);
@@ -327,7 +433,6 @@ public class FragmentHome extends Fragment implements
 		int totalHeight = 0;
 		for (int i = 0; i < listAdapter.getCount(); i++) {
 			View listItem = listAdapter.getView(i, null, listView);
-			// listItem.measure(0, 0);
 			listItem.measure(
 					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
 					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
@@ -338,16 +443,12 @@ public class FragmentHome extends Fragment implements
 		params.height = totalHeight
 				+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
 		return params.height;
-		// listView.setLayoutParams(params);
 	}
 
-	public void onRefresh() {
-		fragmentHome = new FragmentHome();
-		Bundle bundle = new Bundle();
-		bundle.putString("callBack", "callBack");
-		fragmentHome.setArguments(bundle);
-		ft.replace(R.id.id_content, fragmentHome);
-		ft.commit();
+	private ImageView getImageView(int resId) {
+		ImageView image = new ImageView(getActivity());
+		image.setBackgroundResource(resId);
+		return image;
 	}
 
 }

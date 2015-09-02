@@ -1,22 +1,35 @@
 package com.example.scujoo;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.LruCache;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -25,6 +38,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader.ImageCache;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
+import com.scujoo.datas.StaticDatas;
 import com.scujoo.utils.CircleImageView;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
@@ -60,15 +81,23 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	FragmentTransaction ft1;
 	private String userName;
 	private SharedPreferences.Editor editor;
+	public static MainActivity myActivity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		myActivity = this;
 		init();// 初始化组件
 		initEvent();
 		topCalendar.setVisibility(View.GONE);
 		topSearch.setVisibility(View.INVISIBLE);
+
+		// 广播接收器
+		MyReceiver myReceiver = new MyReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("com.scuwangjun.receiverExit");
+		registerReceiver(myReceiver, filter);
 
 		String content = "";
 		content = getIntent().getStringExtra("content");
@@ -159,7 +188,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private void init() {
 		SharedPreferences sp = getSharedPreferences("datas",
 				Activity.MODE_PRIVATE);
-		editor = sp.edit(); 
+		editor = sp.edit();
 
 		nouse1 = (TextView) findViewById(R.id.drawer_left_1);
 		nouse2 = (TextView) findViewById(R.id.drawer_left_2);
@@ -185,7 +214,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		head = (CircleImageView) findViewById(R.id.drawer_left_head);
 
-		Bitmap bt = BitmapFactory.decodeFile(path + "head.jpg");// 从Sd中找头像，转换成Bitmap
+		SharedPreferences sp1 = getSharedPreferences("datas", MODE_PRIVATE);
+		final String name = sp1.getString("userName", "");
+		Bitmap bt = BitmapFactory.decodeFile(path + name + ".jpg");// 从Sd中找头像，转换成Bitmap
 		if (bt != null) {
 			@SuppressWarnings("deprecation")
 			Drawable drawable = new BitmapDrawable(bt);// 转换成drawable
@@ -195,6 +226,25 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			 * 如果SD里面没有则需要从服务器取头像，取回来的头像再保存在SD中
 			 * 
 			 */
+			// 利用volley框架取得服务器的头像图片文件
+			String imageUrl = StaticDatas.URL + "scujoo/images/" + name
+					+ ".jpg";
+			RequestQueue mQueue = Volley.newRequestQueue(MainActivity.this);
+			ImageRequest iq = new ImageRequest(imageUrl,
+					new Response.Listener<Bitmap>() {
+
+						public void onResponse(Bitmap response) {
+							// TODO Auto-generated method stub
+							head.setImageBitmap(response);
+							setPicToView(response, name + ".jpg");
+						}
+					}, 200, 200, Config.ARGB_8888, new ErrorListener() {
+
+						public void onErrorResponse(VolleyError error) {
+
+						}
+					});
+			mQueue.add(iq);
 		}
 	}
 
@@ -273,26 +323,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				editor.remove("userPass");
 				editor.commit();
 				Toast.makeText(MainActivity.this, "先登录哦，亲！", 1).show();
-				startActivity(new Intent().setClass(MainActivity.this,Login.class));
+				startActivity(new Intent().setClass(MainActivity.this,
+						Login.class));
 				finish();
 			} else {
-				startActivity(new Intent().setClass(MainActivity.this,PersonalMessage.class));
+				startActivity(new Intent().setClass(MainActivity.this,
+						PersonalMessage.class));
 			}
 			break;
 		case R.id.drawer_left_more:
 			startActivity(new Intent().setClass(MainActivity.this, More.class));
 			break;
 		case R.id.drawer_left_collection:
-			if(userName.equals("visitor"))
-			{
+			if (userName.equals("visitor")) {
 				editor.remove("userName");
 				editor.remove("userPass");
 				editor.commit();
 				Toast.makeText(MainActivity.this, "先登录哦，亲！", 1).show();
-				startActivity(new Intent().setClass(MainActivity.this,Login.class));
+				startActivity(new Intent().setClass(MainActivity.this,
+						Login.class));
 				finish();
-			}else
-			{
+			} else {
 				startActivity(new Intent().setClass(MainActivity.this,
 						Collection.class));
 			}
@@ -366,4 +417,119 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		}
 	}
 
+	// 定义广播接受者
+	class MyReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			finish();
+		}
+
+	}
+
+	// 创建图片缓存区
+	class MyImageCache implements ImageCache {
+
+		private LruCache<String, Bitmap> mCache;
+
+		public MyImageCache() {
+			int maxSize = 5 * 1024 * 1024;
+			mCache = new LruCache<String, Bitmap>(maxSize) {
+				@Override
+				protected int sizeOf(String key, Bitmap bitmap) {
+					return bitmap.getRowBytes() * bitmap.getHeight();
+				}
+			};
+		}
+
+		public Bitmap getBitmap(String url) {
+			return mCache.get(url);
+
+		}
+
+		public void putBitmap(String url, Bitmap bitmap) {
+			mCache.put(url, bitmap);
+		}
+
+	}
+
+	// 将照片保存在sd卡中
+	private void setPicToView(Bitmap mBitmap, String name) {
+		String sdStatus = Environment.getExternalStorageState();
+		if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+			return;
+		}
+		System.out.println("666");
+		FileOutputStream b = null;
+		File file = new File(path);
+		file.mkdirs();// 创建文件夹
+		System.out.println("777");
+		String fileName = path + name;// 图片名字
+		System.out.println("888");
+		try {
+			System.out.println("888");
+			b = new FileOutputStream(fileName);
+			System.out.println("999");
+			mBitmap.compress(Bitmap.CompressFormat.JPEG, 30, b);// 把数据写入文件
+			System.out.println("000");
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// 关闭流
+				b.flush();
+				b.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	/**
+	 * 回调接口
+	 * 
+	 * @author zhaoxin5
+	 * 
+	 */
+	public interface MyTouchListener {
+		public void onTouchEvent(MotionEvent event);
+	}
+
+	/*
+	 * 保存MyTouchListener接口的列表
+	 */
+	private ArrayList<MyTouchListener> myTouchListeners = new ArrayList<MainActivity.MyTouchListener>();
+
+	/**
+	 * 提供给Fragment通过getActivity()方法来注册自己的触摸事件的方法
+	 * 
+	 * @param listener
+	 */
+	public void registerMyTouchListener(MyTouchListener listener) {
+		myTouchListeners.add(listener);
+	}
+
+	/**
+	 * 提供给Fragment通过getActivity()方法来取消注册自己的触摸事件的方法
+	 * 
+	 * @param listener
+	 */
+	public void unRegisterMyTouchListener(MyTouchListener listener) {
+		myTouchListeners.remove(listener);
+	}
+
+	/**
+	 * 分发触摸事件给所有注册了MyTouchListener的接口
+	 */
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		// TODO Auto-generated method stub
+		for (MyTouchListener listener : myTouchListeners) {
+			listener.onTouchEvent(ev);
+		}
+		return super.dispatchTouchEvent(ev);
+	}
 }

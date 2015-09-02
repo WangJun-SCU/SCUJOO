@@ -47,6 +47,16 @@ public class Login extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
+		/*try {
+			MainActivity.myActivity.finish();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		//通过BroadcastReceiver结束activity
+		System.out.println("11111111");
+		sendBroadcast(new Intent().setAction("com.scuwangjun.receiverExit"));
+		System.out.println("222222222");
 		
 		SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
 		
@@ -157,6 +167,9 @@ public class Login extends Activity {
 				Toast.makeText(getApplicationContext(), "用户名或密码错误", 1).show();
 			}else if ("203".equals(message)) {
 				Toast.makeText(getApplicationContext(), "MD5不一致", 1).show();
+			}else if("205".equals(message))
+			{
+				Toast.makeText(getApplicationContext(), "天啦撸！教务处崩溃了！", 1).show();
 			}else{
 				String name = "";
 				String college = "";
@@ -255,21 +268,15 @@ public class Login extends Activity {
 			System.out.println("777");
 			if(result.equals("200"))
 			{
-				System.out.println("111");
 				SharedPreferences sp = getSharedPreferences("datas", Activity.MODE_PRIVATE);
 				SharedPreferences.Editor editor = sp.edit();
 				editor.putString("userName", "visitor");
 				editor.putString("userPass", "visitor");
 				editor.putString("name", "访客");
-				System.out.println("222");
 				editor.commit();
-				System.out.println("333");
 				Toast.makeText(getApplicationContext(), "访问成功", 1).show();
-				System.out.println("444");
 				startActivity(new Intent().setClass(Login.this,MainActivity.class));
-				System.out.println("555");
 				finish();
-				System.out.println("666");
 			}else{
 				Toast.makeText(Login.this, "访问异常", 1).show();
 			}

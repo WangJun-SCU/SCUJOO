@@ -18,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,11 +28,17 @@ import android.widget.Toast;
 
 import com.scujoo.datas.StaticDatas;
 import com.scujoo.utils.Md5;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXTextObject;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 public class ContentDemand extends Activity {
 
 	private ImageButton back;
 	private ImageButton collect;
+	private ImageButton share;
 	private TextView name;
 	private TextView publishTime;
 	private TextView deadline;
@@ -53,7 +58,9 @@ public class ContentDemand extends Activity {
 	private String userName;
 	private String userPass;
 	private SharedPreferences.Editor editor;
-
+	private IWXAPI api;
+	private String appid = StaticDatas.APP_ID;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,6 +99,27 @@ public class ContentDemand extends Activity {
 
 			public void onClick(View v) {
 				finish();
+			}
+		});
+		//分享到微信
+		share.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				//初始化一个WXTextObject对象
+				WXTextObject object = new WXTextObject();
+				object.text = "分享功能测试！";
+				//用WXTextObject对象初始化一个WXMediaMessage
+				WXMediaMessage mediaMessage = new WXMediaMessage();
+				mediaMessage.mediaObject = object;
+				mediaMessage.description = "分享功能测试！";
+				
+				//构造一个Req
+				SendMessageToWX.Req req = new SendMessageToWX.Req();
+				req.transaction = String.valueOf(System.currentTimeMillis());
+				req.message = mediaMessage;
+				req.scene = SendMessageToWX.Req.WXSceneTimeline;
+				//调用API接口发送数据到微信
+				api.sendReq(req); 
 			}
 		});
 
@@ -150,6 +178,7 @@ public class ContentDemand extends Activity {
 	private void init() {
 		back = (ImageButton) findViewById(R.id.content_demand_back);
 		collect = (ImageButton) findViewById(R.id.content_demand_collect);
+		share = (ImageButton) findViewById(R.id.content_demand_share);
 		name = (TextView) findViewById(R.id.content_demand_name);
 		publishTime = (TextView) findViewById(R.id.content_demand_publish_time);
 		deadline = (TextView) findViewById(R.id.content_demand_deadline);
@@ -166,6 +195,13 @@ public class ContentDemand extends Activity {
 		editor = sp.edit();
 		userName = sp.getString("userName", "");
 		userPass = sp.getString("userPass", "");
+		regToWx();
+	}
+	//将应用ID注册到微信
+	private void regToWx()
+	{
+		api = WXAPIFactory.createWXAPI(this,appid);
+		api.registerApp(appid);
 	}
 
 	class Yibu extends AsyncTask<String, String, String[]> {
